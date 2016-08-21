@@ -53,7 +53,7 @@ def zapisywanie_danych(j, g, M, Mlist, KlikList, stg):
             CONST_STANDARD_RAW_PATH = os.path.join(CONST_STANDARD_PATH, 'RawDataMag', 'klik' + str(stg['CONST_CLIQUE']), 'stopnie', str(stg['CONST_MEAN_k']))
             CONST_STANDARD_WYK_PATH = os.path.join(CONST_STANDARD_PATH, 'Wykresy', 'klik' + str(stg['CONST_CLIQUE']), 'stopnie',  str(stg['CONST_MEAN_k']))
     elif stg['CONST_MODEL'] == 'lazy':
-        CONST_STANDARD_RAW_PATH = os.path.join(CONST_STANDARD_PATH, 'RawDataMag', 'val_start', '{:0<5}'.format(get_model_val(stg)))
+        CONST_STANDARD_RAW_PATH = os.path.join(CONST_STANDARD_PATH, 'RawDataMag', 'val_start', '{:0<7}'.format(get_model_val(stg)))
         CONST_STANDARD_WYK_PATH = os.path.join(CONST_STANDARD_PATH, 'Wykresy')
     else:
         ValuerError('Model not found.')
@@ -87,12 +87,12 @@ def zapisywanie_danych(j, g, M, Mlist, KlikList, stg):
     
     CheckFolder(CONST_STANDARD_WYK_PATH)
     if 'CONST_START_MAGNETIZATION' in stg:
-        filepathWYK = os.path.join(CONST_STANDARD_WYK_PATH, 'model_val{:0<5} file_nb{}.png'.format(get_model_val(stg), fileNumber))
+        filepathWYK = os.path.join(CONST_STANDARD_WYK_PATH, 'model_val{:0<7} file_nb{:0>4}.png'.format(get_model_val(stg), fileNumber))
     else:
         filepathWYK = os.path.join(CONST_STANDARD_WYK_PATH, 'Magnetyzacja'+ str(fileNumber) +'.png')
 
 
-    filepathWYK = os.path.join(CONST_STANDARD_WYK_PATH, 'model_val{:0<5} file_nb{}.png'.format(get_model_val(stg), fileNumber))
+    filepathWYK = os.path.join(CONST_STANDARD_WYK_PATH, 'model_val{:0<7} file_nb{:0>4}.png'.format(get_model_val(stg), fileNumber))
 
     #~ Plotowanie
     plt.plot(Mlist) #~ Tworzenie wykresow magnetyzacji
@@ -141,10 +141,8 @@ def inicjalizacja(stg):
     if stg['CONST_MODEL'] == 'clique':
         KlikList = g.cliques(min = stg['CONST_CLIQUE'], max = stg['CONST_CLIQUE'])
     elif stg['CONST_MODEL'] == 'lazy':
-        KlikList = None
-    
+        KlikList = None    
     return j, g, M, Mlist, KlikList
-
 
 def MCS_steps_clique(j, g, Mlist,  KlikList, stg):    
     'Glowna petla jednego kroku (MCS)'
@@ -180,7 +178,8 @@ def zapisz_magnetyzacje_i_end_check_lazy(j, Mlist, g, stg):
         Mlist.append(M)
         if stg['CONST_PRINT']: print 'Magnetyzacja',j,' : ', M
         var1 = j > stg['CONST_VERTICES']*stg['CONST_SIM_LONG']
-        var2 = False
+        # var2 = False
+        var2 = M == 1 or M == 0
         # var2 = not ((M > stg['CONST_LAZY_CUT']) and (M < (1-stg['CONST_LAZY_CUT'])))
         return var1 or var2
 
@@ -199,14 +198,15 @@ def MCS_steps_lazy(j, g, Mlist,  KlikList, stg):
             while Bp == A: #~ Losowanie sasiada B'
                 Bp = random.choice(g.neighbors(g.vs[B]))
             if Ap == Bp:
-                continue            
+                continue
             #~ print A, B, Ap, Bp
             #~ print g.vs[Ap]["stan"], g.vs[A]["stan"], g.vs[B]["stan"], g.vs[Bp]["stan"]            
             g.vs[Ap]["stan"] = g.vs[B]["stan"] #~ przypisanie nowych wartosci
             g.vs[Bp]["stan"] = g.vs[A]["stan"] #~ zgodnie z modelem sznajdow    
             j = j + 1
 			# TODO: zaznaczanie ze dana czesc grafu nie musi byc sprawdzana i zmieniana w jakiejsc zmienne edga, jak to potem odwrocic?
-            if zapisz_magnetyzacje_i_end_check_lazy(j, Mlist, g, stg): break #~ Wyjscie z MCS            
+            if zapisz_magnetyzacje_i_end_check_lazy(j, Mlist, g, stg): break #~ Wyjscie z MCS       
+    return j
 
 def get_model_val(stg):
     return stg[stg['CONST_MODEL_BASIC_VAL']]
@@ -226,10 +226,11 @@ def jedna_symulacja(stg):
             j = MCS_steps_lazy(j, g, Mlist,  KlikList, stg)
         else:
             raise ValueError('Wrong model type.')
-        print 'Magnetyzacja koncowa', j, ' : ', Mlist[-1]    
+        print 'Magnetyzacja koncowa', j, ' : ', Mlist[-1]
         zapisywanie_danych(j, g, M, Mlist, KlikList, stg)
         del g
     print 'Koniec jednej symulacji'
+    return True
 
 # CONST
 # START, STOP, STEP = 61.25, 61.75, 0.5
@@ -242,7 +243,7 @@ if __name__ == '__main__':
         'CONST_VERTICES'  : 1000,    #~ Ilosc wezlow
         'CONST_SIM_COUNT' : 1,      #~ Ilosc powtorzen symulacji
         'CONST_PRINT'     : False,  #~ Czy drukowac magnetyzacje co CONST_VERTICES krokow?
-        'CONST_TIME'      : True,   #~ Czy przeprowadzac i drukowac wyniki diagnostyki?
+        'CONST_TIME'      : False,   #~ Czy przeprowadzac i drukowac wyniki diagnostyki?
         'CONST_FOLDER'    : "",     #~ Nic nie robi
         'CONST_OVERRIDEN' : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow
         'CONST_COMPRESS'  : True,   #~ Czy ma kompresowac dane przez zapisem    

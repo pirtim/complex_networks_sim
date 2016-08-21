@@ -1,3 +1,6 @@
+# DO NOT USE IT.
+# USE SimulateClique.py
+
 from igraph import Graph     #~ Do symulacji grafu
 import random            #~ Do wybierania losowych elementow z listy
 import matplotlib.pyplot as plt    #~ Do rysowania wykresow
