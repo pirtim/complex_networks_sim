@@ -227,7 +227,7 @@ def jedna_symulacja(stg):
         else:
             raise ValueError('Wrong model type.')
         print 'Magnetyzacja koncowa', j, ' : ', Mlist[-1]
-        zapisywanie_danych(j, g, M, Mlist, KlikList, stg)
+        zapisywanie_danych(j, g, Mlist[-1], Mlist, KlikList, stg)
         del g
     print 'Koniec jednej symulacji'
     return True
