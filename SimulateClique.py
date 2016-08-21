@@ -123,7 +123,13 @@ def czySaKliki(KlikList):
 
 def inicjalizacja(stg):
     #~ Tworzenie grafu losowego Erdos_Renyi
-    g = Graph.Erdos_Renyi(n=stg['CONST_VERTICES'], m=stg['CONST_EDGES']) 
+    if stg['CONST_NETWORK_MODEL' ] == 'erdos':
+        g = Graph.Erdos_Renyi(n=stg['CONST_VERTICES'], m=stg['CONST_EDGES'])
+    elif stg['CONST_NETWORK_MODEL' ] == 'barabasi':
+        g = Graph.Barabasi(n=stg['CONST_VERTICES'], m=stg['CONST_BARABASI_m'])
+    else:
+        raise ValueError('Wrong network type.')
+
     #~ Usuniecie izolowanych wierzcholkow      
     g.delete_vertices(g.vs.select(_degree=0))
     stg['WYN_REAL_VERTICES'] = len(g.vs)
@@ -244,23 +250,24 @@ if __name__ == '__main__':
     rc('font', family='Arial') #Plotowanie polskich liter
     #~ Definicje stalych symulacji
     stg = {
-        # 'CONST_CLIQUE'    : 3,      #~ Wielkosc kliki
-        'CONST_VERTICES'  : 1000,    #~ Ilosc wezlow
-        'CONST_SIM_COUNT' : 1,      #~ Ilosc powtorzen symulacji
-        'CONST_PRINT'     : False,  #~ Czy drukowac magnetyzacje co CONST_VERTICES krokow?
-        # 'CONST_TIME'      : False,   #~ Czy przeprowadzac i drukowac wyniki diagnostyki?
-        # 'CONST_FOLDER'    : "",     #~ Nic nie robi
-        'CONST_OVERRIDEN' : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow
-        # 'CONST_COMPRESS'  : True,   #~ Czy ma kompresowac dane przez zapisem    
-        'CONST_SIM_LONG'  : 1000,     # ile wielkosci N ma liczyc
+        # 'CONST_CLIQUE'        : 3,      #~ Wielkosc kliki
+        'CONST_VERTICES'        : 1000,    #~ Ilosc wezlow
+        'CONST_SIM_COUNT'       : 5,      #~ Ilosc powtorzen symulacji
+        'CONST_PRINT'           : False,  #~ Czy drukowac magnetyzacje co CONST_VERTICES krokow?
+        # 'CONST_TIME'          : False,   #~ Czy przeprowadzac i drukowac wyniki diagnostyki?
+        # 'CONST_FOLDER'        : "",     #~ Nic nie robi
+        'CONST_OVERRIDEN'       : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow
+        # 'CONST_COMPRESS'      : True,   #~ Czy ma kompresowac dane przez zapisem    
+        'CONST_SIM_LONG'        : 1000,     # ile wielkosci N ma liczyc
         'CONST_PATH_BASIC_FOLDER' : 'Wyniki_lazy_fazowe',
-        'CONST_MODEL'     : 'lazy', #'clique',
-        'CONST_LAZY_CUT'  : 0.003,
-        'CONST_MODEL_BASIC_VAL' : 'CONST_START_MAGNETIZATION'        
+        'CONST_MODEL'           : 'lazy', #'clique',
+        'CONST_LAZY_CUT'        : 0.003,
+        'CONST_MODEL_BASIC_VAL' : 'CONST_START_MAGNETIZATION',
+        'CONST_NETWORK_MODEL'   : 'erdos' #'barabasi'
     }
 
     k = 24
-    START, STOP, STEP = 0.50, 0.49, 0.1
+    START, STOP, STEP = 0.05, 0.91, 0.05
     for p in np.arange(START,STOP + STEP,STEP):
         stg['CONST_START_MAGNETIZATION'] = p
         stg['CONST_EDGES']  = int(round(k * stg['CONST_VERTICES'] // 2, 0)) #~ Ilosc polaczen

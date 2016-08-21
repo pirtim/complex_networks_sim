@@ -29,16 +29,13 @@ def PrzedlozDo(lista, doIle):
 
 def plotuj(stg, data):
     fig = plt.figure()
-    # plt.errorbar(stopnie, srednieKonca, yerr=stdKonca, fmt='--o')
-    plt.plot(data[0],data[1], '--o')
+    plt.plot(data[0], data[1], '--o')
     plt.ylim(0,1)
     plt.xlim(0,1)
     plt.ylabel('Prawdopodobienstwo uzyskanie koncowego stanu sieci *w gore*')
     plt.xlabel('Poczatkowa magnetyzacja, N=1000')
-    fig.suptitle('Zaleznosc koncowej magnetyzacji od sredniego stopnia wiercholkow sieci')
-    #~ plt.fill_between(x, sredniaData-stdData, sredniaData+stdData, color='grey')
-    #~ plt.plot(sredniaData, color='black')
-    fig.savefig(os.path.join(stg['CONST_STANDARD_PATH_ANALYZE'],'faz_dla_k{}.png'.format(stg['CONST_CLIQUE'])), dpi = 200)
+    fig.suptitle('Zaleznosc koncowej magnetyzacji od sredniego stopnia wierzcholkow sieci')
+    fig.savefig(os.path.join(stg['CONST_STANDARD_PATH_ANALYZE'], stg['CONST_PATH_WYK'].format() + '.png'), dpi = 200)
     fig.clf()
 
 def check_folder_k(spin, path_file, basic_dir, stg):
@@ -52,26 +49,39 @@ def check_folder_k(spin, path_file, basic_dir, stg):
                 result += 1
     return result
 
+def check_folder_simple(path_file, basic_dir, stg):
+    path = os.path.join(basic_dir, path_file)
+    up, down = 0, 0
+    if os.path.exists(path):
+        for path_opis in filter(lambda name: name.endswith('.json'), os.listdir(path)):
+            with open(os.path.join(path, path_opis), 'r') as f:
+                dic = json.load(f)
+            if dic['CONST_VERTICES'] == stg['CONST_VERTICES'] and dic['CONST_MEAN_k'] == stg['CONST_MEAN_k']:
+                if dic['WYN_M'] == 0:
+                    down += 1
+                elif dic['WYN_M'] == 1:
+                    up += 1
+    return down, up
+
 def analyze(stg):
     stg['CONST_STANDARD_PATH_ANALYZE'] = os.path.join(stg['CONST_PATH_BASIC_FOLDER'], 'analyze')
     CheckFolder(stg['CONST_STANDARD_PATH_ANALYZE'])
-    stg['CONST_SHORT_RAW_PATH'] = os.path.join(stg['CONST_PATH_BASIC_FOLDER'], 'RawDataMag', 'klik' + str(stg['CONST_CLIQUE']), 'mag_start')
+    stg['CONST_SHORT_RAW_PATH'] = os.path.join(stg['CONST_PATH_BASIC_FOLDER'], 'RawDataMag')
 
     x, y = [], []
 
     basic_dir = stg['CONST_SHORT_RAW_PATH']
     for path_file in sorted(os.listdir(basic_dir)):
-        down = check_folder_k(0, path_file, basic_dir, stg)
-        up   = check_folder_k(1, path_file, basic_dir, stg)
+        down, up = check_folder_simple(path_file, basic_dir, stg)
         if up + down != 0:
-            x.append(float(path_file))
-            y.append(up/(up+down))   
-# H:\Dropbox\Studia\licencjat\Symulacje2016.07.07\rewritten\Wyniki_fazowe\RawDataMag\klik3\mag_start\0.010\k0\simResultsOpis0
+            x.append(float(path_file[-7:]))
+            y.append(up/(up+down))
+# H:\Dropbox\Studia\licencjat\Symulacje2016.07.07\complex_networks_sim\Wyniki_lazy_fazowe\RawDataMag\val_start_0.50000
 
     wynik = (x,y)
     print wynik
     if stg['CONST_DUMP']:
-        with open(os.path.join(stg['CONST_STANDARD_PATH_ANALYZE'], 'raw.data') , 'w') as f:
+        with open(os.path.join(stg['CONST_STANDARD_PATH_ANALYZE'], stg['CONST_PATH_WYK'] + '.data') , 'w') as f:
             f.writelines(str(wynik))
     plotuj(stg, wynik)
 
@@ -85,7 +95,8 @@ if __name__ == '__main__':
         'CONST_OVERRIDEN' : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow   
         'CONST_DUMP'      : True,   # czy ma zrzucac wektory wynikow 
         'CONST_PATH_BASIC_FOLDER' : 'Wyniki_lazy_fazowe',
-        'WYN_meanG' : 24
+        'CONST_MEAN_k'    : 24,
+        'CONST_PATH_WYK'  : 'faz_dla_lazy'
     }
 
     analyze(stg)
