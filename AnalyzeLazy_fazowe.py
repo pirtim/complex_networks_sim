@@ -2,6 +2,8 @@ from __future__ import division #~ Domysle dzielenie int jako liczb float
 # from igraph import *     #~ Niepotrzebne
 
 import random            #~ Niepotrzebne
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt #~ Do wykresow
 from  matplotlib import rc
 import time                #~ Niepotrzebne
@@ -86,15 +88,15 @@ def analyze(stg):
 
 if __name__ == '__main__':
     # skrypt do analizowania przejscia fazowego
-    rc('font', family='Arial') #Plotowanie polskich liter
+    # rc('font', family='Arial') #Plotowanie polskich liter
     #~ Definicje stalych symulacji
     stg = {
         # 'CONST_CLIQUE'    : 3,      #~ Wielkosc kliki
-        'CONST_VERTICES'  : 10000,   #~ Ilosc wezlow
+        'CONST_VERTICES'  : 1000,   #~ Ilosc wezlow
         'CONST_OVERRIDEN' : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow   
         'CONST_DUMP'      : True,   # czy ma zrzucac wektory wynikow 
-        'CONST_PATH_BASIC_FOLDER' : '..//Wyniki_lazy_fazowe',
-        'CONST_MEAN_k'    : 77,
+        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_lazy_fazowe',
+        'CONST_MEAN_k'    : 24,
         'CONST_PATH_WYK'  : 'faz_dla_lazy'
     }
 
