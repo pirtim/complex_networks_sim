@@ -47,13 +47,13 @@ def zapisywanie_danych(j, g, M, Mlist, KlikList, stg):
 
     if stg['CONST_MODEL'] == 'clique': 
         if 'CONST_START_MAGNETIZATION' in stg:
-            CONST_STANDARD_RAW_PATH = os.path.join(CONST_STANDARD_PATH, 'RawDataMag', 'klik' + str(stg['CONST_CLIQUE']), 'mag_start', '{:0<5}'.format(stg['CONST_START_MAGNETIZATION']))
-            CONST_STANDARD_WYK_PATH = os.path.join(CONST_STANDARD_PATH, 'Wykresy', 'klik' + str(stg['CONST_CLIQUE']))#, 'mag_start', '{:0<5}'.format(stg['CONST_START_MAGNETIZATION']))
+            CONST_STANDARD_RAW_PATH = os.path.join(CONST_STANDARD_PATH, 'RawDataMag', 'klik' + str(stg['CONST_CLIQUE']), 'mag_start_{:0<5}'.format(stg['CONST_START_MAGNETIZATION']))
+            CONST_STANDARD_WYK_PATH = os.path.join(CONST_STANDARD_PATH, 'Wykresy', 'klik' + str(stg['CONST_CLIQUE']))#, 'mag_start_{:0<5}'.format(stg['CONST_START_MAGNETIZATION']))
         else:
             CONST_STANDARD_RAW_PATH = os.path.join(CONST_STANDARD_PATH, 'RawDataMag', 'klik' + str(stg['CONST_CLIQUE']), 'stopnie', str(stg['CONST_MEAN_k']))
             CONST_STANDARD_WYK_PATH = os.path.join(CONST_STANDARD_PATH, 'Wykresy', 'klik' + str(stg['CONST_CLIQUE']), 'stopnie',  str(stg['CONST_MEAN_k']))
     elif stg['CONST_MODEL'] == 'lazy':
-        CONST_STANDARD_RAW_PATH = os.path.join(CONST_STANDARD_PATH, 'RawDataMag', 'val_start', '{:0<7}'.format(get_model_val(stg)))
+        CONST_STANDARD_RAW_PATH = os.path.join(CONST_STANDARD_PATH, 'RawDataMag', 'val_start_{:0<7}'.format(get_model_val(stg)))
         CONST_STANDARD_WYK_PATH = os.path.join(CONST_STANDARD_PATH, 'Wykresy')
     else:
         ValuerError('Model not found.')
@@ -241,22 +241,24 @@ if __name__ == '__main__':
     stg = {
         # 'CONST_CLIQUE'    : 3,      #~ Wielkosc kliki
         'CONST_VERTICES'  : 1000,    #~ Ilosc wezlow
-        'CONST_SIM_COUNT' : 1,      #~ Ilosc powtorzen symulacji
+        'CONST_SIM_COUNT' : 3,      #~ Ilosc powtorzen symulacji
         'CONST_PRINT'     : False,  #~ Czy drukowac magnetyzacje co CONST_VERTICES krokow?
-        'CONST_TIME'      : False,   #~ Czy przeprowadzac i drukowac wyniki diagnostyki?
-        'CONST_FOLDER'    : "",     #~ Nic nie robi
+        # 'CONST_TIME'      : False,   #~ Czy przeprowadzac i drukowac wyniki diagnostyki?
+        # 'CONST_FOLDER'    : "",     #~ Nic nie robi
         'CONST_OVERRIDEN' : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow
-        'CONST_COMPRESS'  : True,   #~ Czy ma kompresowac dane przez zapisem    
+        # 'CONST_COMPRESS'  : True,   #~ Czy ma kompresowac dane przez zapisem    
         'CONST_SIM_LONG'  : 1000,     # ile wielkosci N ma liczyc
-        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_lazy_meanK',
+        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_lazy_fazowe',
         'CONST_MODEL'     : 'lazy', #'clique',
         'CONST_LAZY_CUT'  : 0.003,
-        'CONST_MODEL_BASIC_VAL' : 'CONST_MEAN_k'
+        'CONST_MODEL_BASIC_VAL' : 'CONST_START_MAGNETIZATION'        
     }
 
-    START, STOP, STEP = 10.00, 30.00, 1.0
+    k = 24
+    START, STOP, STEP = 0.10, 0.90, 0.1
     for p in np.arange(START,STOP + STEP,STEP):
-        stg['CONST_EDGES']  = int(round(p * stg['CONST_VERTICES'] // 2, 0)) #~ Ilosc polaczen
+        stg['CONST_START_MAGNETIZATION'] = p
+        stg['CONST_EDGES']  = int(round(k * stg['CONST_VERTICES'] // 2, 0)) #~ Ilosc polaczen
         stg['CONST_MEAN_k'] = round(stg['CONST_EDGES']/stg['CONST_VERTICES']*2, 1)
         jedna_symulacja(stg)
 
