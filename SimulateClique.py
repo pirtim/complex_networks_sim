@@ -11,6 +11,7 @@ import time                #~ Do diagnostyki czasu wykonania
 import os                #~ Do sprawdzania istnienia folderów
 import gzip                #~ Do pakowania plikow wynikowych
 import cPickle as pickle
+import datetime as dt
 #~ Do zrobienia:
 #~ 0. Skrypty do analizy przepisac
 #~ 1. Multithreading: http://www.tutorialspoint.com/python/python_multithreading.htm
@@ -39,6 +40,7 @@ def zapisywanie_danych(j, g, M, Mlist, KlikList, stg):
     if stg['CONST_MODEL'] == 'clique':
         daneWrite['WYN_len(KlikList)'] = len(KlikList)
     daneWrite['WYN_M'] = M
+    daneWrite['WYN_DATETIME'] = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     # daneWrite = '''CONST_VERTICES\n{}\nCONST_EDGES\n{}\nCONST_SIM_COUNT\n{}\nCONST_PRINT\n{}\nCONST_TIME\n{}\nmeanG\n{}\nj\n{}\nlen(KlikList)\n{}\nM\n{}\nwielkosc klik\n{}'''.format(stg['CONST_VERTICES'], stg['CONST_EDGES'], stg['CONST_SIM_COUNT'], stg['CONST_PRINT'], stg['CONST_TIME'], round(mean(g.degree()), 2),j, len(KlikList), M, stg['CONST_CLIQUE'])
     
@@ -214,6 +216,8 @@ def get_model_val(stg):
 def jedna_symulacja(stg):
     'Petla po powtorzeniach symulacji dla roznych grafow'
     for i in range(stg['CONST_SIM_COUNT']):
+        start_time = dt.datetime.now()
+
         print '\nRozpoczynam symulacje nr:', i, 'dla: '
         j, g, M, Mlist, KlikList = inicjalizacja(stg)     
         wypiszDane(g, KlikList, stg)
@@ -227,6 +231,7 @@ def jedna_symulacja(stg):
         else:
             raise ValueError('Wrong model type.')
         print 'Magnetyzacja koncowa', j, ' : ', Mlist[-1]
+        stg['WYN_TIME_OF_COMPUTING_s'] = (dt.datetime.now() - start_time).total_seconds()
         zapisywanie_danych(j, g, Mlist[-1], Mlist, KlikList, stg)
         del g
     print 'Koniec jednej symulacji'
@@ -241,7 +246,7 @@ if __name__ == '__main__':
     stg = {
         # 'CONST_CLIQUE'    : 3,      #~ Wielkosc kliki
         'CONST_VERTICES'  : 1000,    #~ Ilosc wezlow
-        'CONST_SIM_COUNT' : 3,      #~ Ilosc powtorzen symulacji
+        'CONST_SIM_COUNT' : 1,      #~ Ilosc powtorzen symulacji
         'CONST_PRINT'     : False,  #~ Czy drukowac magnetyzacje co CONST_VERTICES krokow?
         # 'CONST_TIME'      : False,   #~ Czy przeprowadzac i drukowac wyniki diagnostyki?
         # 'CONST_FOLDER'    : "",     #~ Nic nie robi
@@ -255,7 +260,7 @@ if __name__ == '__main__':
     }
 
     k = 24
-    START, STOP, STEP = 0.10, 0.90, 0.1
+    START, STOP, STEP = 0.50, 0.49, 0.1
     for p in np.arange(START,STOP + STEP,STEP):
         stg['CONST_START_MAGNETIZATION'] = p
         stg['CONST_EDGES']  = int(round(k * stg['CONST_VERTICES'] // 2, 0)) #~ Ilosc polaczen
