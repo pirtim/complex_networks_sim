@@ -69,7 +69,6 @@ def analyze(stg):
     stg['CONST_SHORT_RAW_PATH'] = os.path.join(stg['CONST_PATH_BASIC_FOLDER'], 'RawDataMag')
 
     x, y = [], []
-
     basic_dir = stg['CONST_SHORT_RAW_PATH']
     for path_file in sorted(os.listdir(basic_dir)):
         down, up = check_folder_simple(path_file, basic_dir, stg)
@@ -91,11 +90,11 @@ if __name__ == '__main__':
     #~ Definicje stalych symulacji
     stg = {
         # 'CONST_CLIQUE'    : 3,      #~ Wielkosc kliki
-        'CONST_VERTICES'  : 1000,   #~ Ilosc wezlow
+        'CONST_VERTICES'  : 10000,   #~ Ilosc wezlow
         'CONST_OVERRIDEN' : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow   
         'CONST_DUMP'      : True,   # czy ma zrzucac wektory wynikow 
-        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_lazy_fazowe',
-        'CONST_MEAN_k'    : 24,
+        'CONST_PATH_BASIC_FOLDER' : '..//Wyniki_lazy_fazowe',
+        'CONST_MEAN_k'    : 77,
         'CONST_PATH_WYK'  : 'faz_dla_lazy'
     }
 
