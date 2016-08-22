@@ -88,7 +88,7 @@ def BA_clique_normal(p):
     return simulation
 
 def main():
-    clients = ipp.Client()
+    clients = ipp.Client(sshserver='10.33.15.16')
     dview = clients.load_balanced_view()
 
     results = dview.map(BA_clique_normal(None), [2,3,4,5,6,7,8,9,10,11][::-1]*1)
