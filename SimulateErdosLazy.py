@@ -58,24 +58,24 @@ def BA_clique_faz(p):
         print 'end', k
     return simulation
 
-def BA_clique_normal(p):
+def ER_lazy_normal(p):
     def simulation(x):
         stg = {    
-            'CONST_CLIQUE'    : 3,  #~ Wielkosc kliki        
+            # 'CONST_CLIQUE'    : 3,  #~ Wielkosc kliki        
             'CONST_PRINT'     : False,  #~ Czy drukowac magnetyzacje co CONST_VERTICES krokow?
             'CONST_OVERRIDEN' : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow 
-            'CONST_VERTICES'  : 100000,  #~ Ilosc wezlow
+            'CONST_VERTICES'  : 10000,  #~ Ilosc wezlow
             'CONST_SIM_COUNT' : 1,      #~ Ilosc powtorzen symulacji
-            'CONST_SIM_LONG'  : 3,  # ile wielkosci N ma liczyc            
-            'CONST_PATH_BASIC_FOLDER' : 'now/complex_networks_sim/Wyniki_barabasi_clique_normal',
-            'CONST_MODEL'             : 'clique',  
-            'CONST_MODEL_BASIC_VAL'   : 'CONST_BARABASI_m',
-            'CONST_NETWORK_MODEL'     : 'barabasi',
-            'CONST_BARABASI_m'        : x,            
+            'CONST_SIM_LONG'  : 10000,  # ile wielkosci N ma liczyc            
+            'CONST_PATH_BASIC_FOLDER' : 'now/complex_networks_sim/Wyniki_lazy_meanK',
+            'CONST_MODEL'             : 'lazy',  
+            'CONST_MODEL_BASIC_VAL'   : 'CONST_MEAN_k',
+            'CONST_NETWORK_MODEL'     : 'erdos',
+            # 'CONST_BARABASI_m'        : x,            
             # 'CONST_START_MAGNETIZATION' : 0.5
         }
 
-        k = x*2
+        k = x
         stg['CONST_EDGES']  = int(round(k * stg['CONST_VERTICES'] // 2, 0)) #~ Ilosc polaczen
         stg['CONST_MEAN_k'] = round(stg['CONST_EDGES']/stg['CONST_VERTICES']*2, 1)    
         
@@ -90,7 +90,7 @@ def main():
     clients = ipp.Client()
     dview = clients.load_balanced_view()
 
-    results = dview.map(BA_clique_normal(None), [2,3,4,5,6,7,8,9,10,11][::-1]*1)
+    results = dview.map(BA_clique_normal(None), [77]*144)
     print list(results) 
     # results = dview.map(BA_lazy_faz(None), [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5]*8)
     # print list(results)
