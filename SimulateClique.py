@@ -54,8 +54,8 @@ def zapisywanie_danych(j, g, M, Mlist, KlikList, stg):
             CONST_STANDARD_RAW_PATH = os.path.join(CONST_STANDARD_PATH, 'RawDataMag', 'klik' + str(stg['CONST_CLIQUE']), 'mag_start_{:0<5}'.format(stg['CONST_START_MAGNETIZATION']))
             CONST_STANDARD_WYK_PATH = os.path.join(CONST_STANDARD_PATH, 'Wykresy', 'klik' + str(stg['CONST_CLIQUE']))#, 'mag_start_{:0<5}'.format(stg['CONST_START_MAGNETIZATION']))
         else:
-            CONST_STANDARD_RAW_PATH = os.path.join(CONST_STANDARD_PATH, 'RawDataMag', 'klik' + str(stg['CONST_CLIQUE']), 'stopnie', str(stg['CONST_MEAN_k']))
-            CONST_STANDARD_WYK_PATH = os.path.join(CONST_STANDARD_PATH, 'Wykresy', 'klik' + str(stg['CONST_CLIQUE']), 'stopnie',  str(stg['CONST_MEAN_k']))
+            CONST_STANDARD_RAW_PATH = os.path.join(CONST_STANDARD_PATH, 'RawDataMag', 'klik' + str(stg['CONST_CLIQUE']))
+            CONST_STANDARD_WYK_PATH = os.path.join(CONST_STANDARD_PATH, 'Wykresy', 'klik' + str(stg['CONST_CLIQUE']))
     elif stg['CONST_MODEL'] == 'lazy':
         CONST_STANDARD_RAW_PATH = os.path.join(CONST_STANDARD_PATH, 'RawDataMag', 'val_start_{:0<7}'.format(get_model_val(stg)))
         CONST_STANDARD_WYK_PATH = os.path.join(CONST_STANDARD_PATH, 'Wykresy')
@@ -65,10 +65,10 @@ def zapisywanie_danych(j, g, M, Mlist, KlikList, stg):
     CONST_PATH_FILES_NUMBER = os.path.join(CONST_STANDARD_RAW_PATH, 'filesCount.txt')
     CONST_GENERATED_FILES    = 2
     
-    if stg['CONST_MODEL'] == 'lazy':
+    if   stg['CONST_MODEL'] == 'lazy':
         SPECIALdirectoryRAW = CONST_STANDARD_RAW_PATH
-    else:
-        SPECIALdirectoryRAW = os.path.join(CONST_STANDARD_RAW_PATH, 'k' + str(int(round(Mlist[-1],0))))
+    elif stg['CONST_MODEL'] == 'clique':
+        SPECIALdirectoryRAW = os.path.join(CONST_STANDARD_RAW_PATH, 'klik{}'.format(stg['CONST_CLIQUE']))
     CheckFolder(SPECIALdirectoryRAW)
     
     if stg['CONST_OVERRIDEN']:

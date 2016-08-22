@@ -91,7 +91,7 @@ def main():
     clients = ipp.Client()
     dview = clients.load_balanced_view()
 
-    results = dview.map(BA_clique_normal(None), [4,10,20,25,30,33,37,40]*1)
+    results = dview.map(BA_clique_normal(None), [3,4,5,6,7,8,9,10,11,12,13,14][::-1]*1)
     print list(results)    
     # results = dview.map(BA_clique_normal(None), [4,10,20,25,30,33,37,40]*4)
     # print list(results)
