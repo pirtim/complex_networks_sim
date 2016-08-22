@@ -252,7 +252,7 @@ if __name__ == '__main__':
     rc('font', family='Arial') #Plotowanie polskich liter
     #~ Definicje stalych symulacji
     stg = {
-        # 'CONST_CLIQUE'        : 3,      #~ Wielkosc kliki
+        'CONST_CLIQUE'          : 3,      #~ Wielkosc kliki
         'CONST_VERTICES'        : 1000,    #~ Ilosc wezlow
         'CONST_SIM_COUNT'       : 15,      #~ Ilosc powtorzen symulacji
         'CONST_PRINT'           : False,  #~ Czy drukowac magnetyzacje co CONST_VERTICES krokow?
@@ -261,18 +261,18 @@ if __name__ == '__main__':
         'CONST_OVERRIDEN'       : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow
         # 'CONST_COMPRESS'      : True,   #~ Czy ma kompresowac dane przez zapisem    
         'CONST_SIM_LONG'        : 1000,     # ile wielkosci N ma liczyc
-        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_lazy_fazowe',
-        'CONST_MODEL'           : 'lazy', #'clique',
+        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_barabasi_clique_normal',
+        'CONST_MODEL'           : 'clique',
         'CONST_LAZY_CUT'        : 0.003,
         'CONST_MODEL_BASIC_VAL' : 'CONST_START_MAGNETIZATION',
-        'CONST_NETWORK_MODEL'   : 'erdos', #'barabasi',
+        'CONST_NETWORK_MODEL'   : 'barabasi',
         'CONST_BARABASI_m'      : 4
     }
 
     k = 24
-    START, STOP, STEP = 0.05, 0.91, 0.05
+    START, STOP, STEP = 0.05, 0.05, 0.05
     for p in np.arange(START,STOP + STEP,STEP):
-        stg['CONST_START_MAGNETIZATION'] = p
+        stg['CONST_START_MAGNETIZATION'] = 0.5
         stg['CONST_EDGES']  = int(round(k * stg['CONST_VERTICES'] // 2, 0)) #~ Ilosc polaczen
         stg['CONST_MEAN_k'] = round(stg['CONST_EDGES']/stg['CONST_VERTICES']*2, 1)
         jedna_symulacja(stg)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import division #~ Domysle dzielenie int jako liczb float
 import ipyparallel as ipp
-from SimulateClique import jedna_symulacja
+# from SimulateClique import jedna_symulacja
 import numpy as np   
 
 def BA_lazy_faz(p):
@@ -70,7 +70,7 @@ def BA_clique_normal(p):
             'CONST_SIM_LONG'  : 20,  # ile wielkosci N ma liczyc            
             'CONST_PATH_BASIC_FOLDER' : 'now/Wyniki_barabasi_clique_normal',
             'CONST_MODEL'             : 'clique',  
-            'CONST_MODEL_BASIC_VAL'   : 'CONST_START_MAGNETIZATION',
+            'CONST_MODEL_BASIC_VAL'   : 'CONST_BARABASI_m',
             'CONST_NETWORK_MODEL'     : 'barabasi',
             'CONST_BARABASI_m'        : x,            
             'CONST_START_MAGNETIZATION' : 0.5
@@ -92,12 +92,12 @@ def main():
     dview = clients.load_balanced_view()
 
     results = dview.map(BA_clique_normal(None), [4,10,20,25,30,33,37,40]*1)
+    print list(results)    
+    results = dview.map(BA_clique_normal(None), [4,10,20,25,30,33,37,40]*4)
     print list(results)
     results = dview.map(BA_lazy_faz(None), [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5]*8)
     print list(results)
     results = dview.map(BA_clique_faz(None), [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5]*8)
-    print list(results)
-    results = dview.map(BA_clique_normal(None), [4,10,20,25,30,33,37,40]*4)
     print list(results)
     print 'Koniec Programu'
 
