@@ -3,6 +3,8 @@
 from __future__ import division #~ Domysle dzielenie int jako liczb float
 from igraph import *     #~ Do symulacji grafu
 import random            #~ Do wybierania losowych elementow z listy
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt    #~ Do rysowania wykresow
 from  matplotlib import rc
 import itertools        #~ do list i iteratorow
@@ -100,7 +102,7 @@ def zapisywanie_danych(j, g, M, Mlist, KlikList, stg):
     plt.plot(Mlist) #~ Tworzenie wykresow magnetyzacji
     plt.ylabel('Magnetyzacja')
     plt.xlabel('Krok (' + str(j) + ' MCS)')
-    plt.title(u'Ilość węzłów: {}, połączeń: {}'.format(stg['CONST_VERTICES'], stg['CONST_EDGES']))
+    plt.title(u'Ilosc wezlow: {}, polaczen: {}'.format(stg['CONST_VERTICES'], stg['CONST_EDGES']))
     plt.ylim(0,1)
     plt.savefig(filepathWYK, bbox_inches='tight', dpi = 300)
     plt.clf()
@@ -252,7 +254,7 @@ if __name__ == '__main__':
     stg = {
         # 'CONST_CLIQUE'        : 3,      #~ Wielkosc kliki
         'CONST_VERTICES'        : 1000,    #~ Ilosc wezlow
-        'CONST_SIM_COUNT'       : 5,      #~ Ilosc powtorzen symulacji
+        'CONST_SIM_COUNT'       : 15,      #~ Ilosc powtorzen symulacji
         'CONST_PRINT'           : False,  #~ Czy drukowac magnetyzacje co CONST_VERTICES krokow?
         # 'CONST_TIME'          : False,   #~ Czy przeprowadzac i drukowac wyniki diagnostyki?
         # 'CONST_FOLDER'        : "",     #~ Nic nie robi
@@ -263,7 +265,8 @@ if __name__ == '__main__':
         'CONST_MODEL'           : 'lazy', #'clique',
         'CONST_LAZY_CUT'        : 0.003,
         'CONST_MODEL_BASIC_VAL' : 'CONST_START_MAGNETIZATION',
-        'CONST_NETWORK_MODEL'   : 'erdos' #'barabasi'
+        'CONST_NETWORK_MODEL'   : 'erdos', #'barabasi',
+        'CONST_BARABASI_m'      : 4
     }
 
     k = 24
