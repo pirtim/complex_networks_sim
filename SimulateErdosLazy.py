@@ -90,7 +90,7 @@ def main():
     clients = ipp.Client()
     dview = clients.load_balanced_view()
 
-    results = dview.map(BA_clique_normal(None), [77]*144)
+    results = dview.map(ER_lazy_normal(None), [77]*144)
     print list(results) 
     # results = dview.map(BA_lazy_faz(None), [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5]*8)
     # print list(results)
