@@ -12,7 +12,7 @@ def BA_lazy_faz(p):
             'CONST_VERTICES'  : 10000,    #~ Ilosc wezlow
             'CONST_SIM_COUNT' : 1,      #~ Ilosc powtorzen symulacji
             'CONST_SIM_LONG'  : 10000,     # ile wielkosci N ma liczyc            
-            'CONST_PATH_BASIC_FOLDER' : 'now/Wyniki_barabasi_lazy_fazowe',
+            'CONST_PATH_BASIC_FOLDER' : 'now/complex_networks_sim/Wyniki_barabasi_lazy_fazowe',
             'CONST_MODEL'             : 'lazy',  
             'CONST_MODEL_BASIC_VAL'   : 'CONST_START_MAGNETIZATION',
             'CONST_NETWORK_MODEL'     : 'barabasi',
@@ -40,7 +40,7 @@ def BA_clique_faz(p):
             'CONST_VERTICES'  : 10000,  #~ Ilosc wezlow
             'CONST_SIM_COUNT' : 1,      #~ Ilosc powtorzen symulacji
             'CONST_SIM_LONG'  : 20,  # ile wielkosci N ma liczyc            
-            'CONST_PATH_BASIC_FOLDER' : 'now/Wyniki_barabasi_clique_fazowe',
+            'CONST_PATH_BASIC_FOLDER' : 'now/complex_networks_sim/Wyniki_barabasi_clique_fazowe',
             'CONST_MODEL'             : 'clique',  
             'CONST_MODEL_BASIC_VAL'   : 'CONST_START_MAGNETIZATION',
             'CONST_NETWORK_MODEL'     : 'barabasi',
@@ -68,7 +68,7 @@ def BA_clique_normal(p):
             'CONST_VERTICES'  : 10000,  #~ Ilosc wezlow
             'CONST_SIM_COUNT' : 1,      #~ Ilosc powtorzen symulacji
             'CONST_SIM_LONG'  : 20,  # ile wielkosci N ma liczyc            
-            'CONST_PATH_BASIC_FOLDER' : 'now/Wyniki_barabasi_clique_normal',
+            'CONST_PATH_BASIC_FOLDER' : 'now/complex_networks_sim/Wyniki_barabasi_clique_normal',
             'CONST_MODEL'             : 'clique',  
             'CONST_MODEL_BASIC_VAL'   : 'CONST_BARABASI_m',
             'CONST_NETWORK_MODEL'     : 'barabasi',
