@@ -63,7 +63,7 @@ def zapisywanie_danych(j, g, M, Mlist, KlikList, stg):
         ValuerError('Model not found.')
             
     CONST_PATH_FILES_NUMBER = os.path.join(CONST_STANDARD_RAW_PATH, 'filesCount.txt')
-    CONST_GENERATED_FILES    = 2
+    CONST_GENERATED_FILES   = 2
     
     if   stg['CONST_MODEL'] == 'lazy':
         SPECIALdirectoryRAW = CONST_STANDARD_RAW_PATH
@@ -75,7 +75,6 @@ def zapisywanie_danych(j, g, M, Mlist, KlikList, stg):
         fileNumber = i
     elif os.path.isfile(CONST_PATH_FILES_NUMBER):
         with open(CONST_PATH_FILES_NUMBER, 'r+') as f_n:
-            # fileNumber = eval(f_n.read())
             fileNumber = int(f_n.read())
             f_n.seek(0) #~ Bufor na poczatek pliku
             f_n.write(str(fileNumber + 1))
@@ -96,7 +95,7 @@ def zapisywanie_danych(j, g, M, Mlist, KlikList, stg):
         filepathWYK = os.path.join(CONST_STANDARD_WYK_PATH, 'Magnetyzacja'+ str(fileNumber) +'.png')
 
 
-    filepathWYK = os.path.join(CONST_STANDARD_WYK_PATH, 'model_val{:0<7} file_nb{:0>4}.png'.format(get_model_val(stg), fileNumber))
+    filepathWYK = os.path.join(CONST_STANDARD_WYK_PATH, 'model_val{:0>2} file_nb{:0>4}.png'.format(get_model_val(stg), fileNumber))
 
     #~ Plotowanie
     plt.plot(Mlist) #~ Tworzenie wykresow magnetyzacji
