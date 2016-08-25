@@ -86,11 +86,38 @@ def ER_lazy_normal(p):
         print 'end', k
     return simulation
 
+def ER_lazy_time(p):
+    def simulation(x):
+        stg = {          
+            'CONST_PRINT'     : False,  #~ Czy drukowac magnetyzacje co CONST_VERTICES krokow?
+            'CONST_OVERRIDEN' : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow 
+            'CONST_PLOT'      : False,
+            'CONST_VERTICES'  : 10000,  #~ Ilosc wezlow
+            'CONST_SIM_COUNT' : 1,      #~ Ilosc powtorzen symulacji
+            'CONST_SIM_LONG'  : 100000,  # ile wielkosci N ma liczyc            
+            'CONST_PATH_BASIC_FOLDER' : 'now/complex_networks_sim/Wyniki_lazy_meanK',
+            'CONST_MODEL'             : 'lazy',  
+            'CONST_MODEL_BASIC_VAL'   : 'CONST_MEAN_k',
+            'CONST_NETWORK_MODEL'     : 'erdos',
+        }
+
+        k = 77
+        stg['CONST_EDGES']  = int(round(k * stg['CONST_VERTICES'] // 2, 0)) #~ Ilosc polaczen
+        stg['CONST_MEAN_k'] = round(stg['CONST_EDGES']/stg['CONST_VERTICES']*2, 1)    
+        
+        import sys
+        sys.path.append('/dmj/fizmed/pkowalczyk/now/complex_networks_sim')
+        import SimulateClique
+        result = SimulateClique.jedna_symulacja(stg)       
+        print 'end', k
+    return simulation
+
+
 def main():
     clients = ipp.Client()
     dview = clients.load_balanced_view()
 
-    results = dview.map(ER_lazy_normal(None), [77]*144)
+    results = dview.map(ER_lazy_time(None), [None]*10000)
     print list(results) 
     # results = dview.map(BA_lazy_faz(None), [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5]*8)
     # print list(results)
