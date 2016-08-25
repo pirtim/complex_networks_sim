@@ -98,13 +98,14 @@ def zapisywanie_danych(j, g, M, Mlist, KlikList, stg):
     filepathWYK = os.path.join(CONST_STANDARD_WYK_PATH, 'model_val{:0>2} file_nb{:0>4}.png'.format(get_model_val(stg), fileNumber))
 
     #~ Plotowanie
-    plt.plot(Mlist) #~ Tworzenie wykresow magnetyzacji
-    plt.ylabel('Magnetyzacja')
-    plt.xlabel('Krok (' + str(j) + ' MCS)')
-    plt.title(u'Ilosc wezlow: {}, polaczen: {}'.format(stg['CONST_VERTICES'], stg['CONST_EDGES']))
-    plt.ylim(0,1)
-    plt.savefig(filepathWYK, bbox_inches='tight', dpi = 300)
-    plt.clf()
+    if 'CONST_PLOT' in stg and stg['CONST_PLOT']:
+        plt.plot(Mlist) #~ Tworzenie wykresow magnetyzacji
+        plt.ylabel('Magnetyzacja')
+        plt.xlabel('Krok (' + str(j) + ' MCS)')
+        plt.title(u'Ilosc wezlow: {}, polaczen: {}'.format(stg['CONST_VERTICES'], stg['CONST_EDGES']))
+        plt.ylim(0,1)
+        plt.savefig(filepathWYK, bbox_inches='tight', dpi = 300)
+        plt.clf()
 
 def zapisz_magnetyzacje_i_end_check_clique(j, Mlist, g, stg):
     if j % (stg['CONST_VERTICES']//100) == 0:#~ 1000) == 0: 
@@ -251,27 +252,28 @@ if __name__ == '__main__':
     rc('font', family='Arial') #Plotowanie polskich liter
     #~ Definicje stalych symulacji
     stg = {
-        'CONST_CLIQUE'          : 3,      #~ Wielkosc kliki
+        # 'CONST_CLIQUE'          : 3,      #~ Wielkosc kliki
         'CONST_VERTICES'        : 1000,    #~ Ilosc wezlow
-        'CONST_SIM_COUNT'       : 15,      #~ Ilosc powtorzen symulacji
+        'CONST_SIM_COUNT'       : 10000,      #~ Ilosc powtorzen symulacji
         'CONST_PRINT'           : False,  #~ Czy drukowac magnetyzacje co CONST_VERTICES krokow?
         # 'CONST_TIME'          : False,   #~ Czy przeprowadzac i drukowac wyniki diagnostyki?
         # 'CONST_FOLDER'        : "",     #~ Nic nie robi
+        'CONST_PLOT'            : False,
         'CONST_OVERRIDEN'       : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow
         # 'CONST_COMPRESS'      : True,   #~ Czy ma kompresowac dane przez zapisem    
-        'CONST_SIM_LONG'        : 1000,     # ile wielkosci N ma liczyc
-        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_barabasi_clique_normal',
-        'CONST_MODEL'           : 'clique',
-        'CONST_LAZY_CUT'        : 0.003,
-        'CONST_MODEL_BASIC_VAL' : 'CONST_START_MAGNETIZATION',
-        'CONST_NETWORK_MODEL'   : 'barabasi',
-        'CONST_BARABASI_m'      : 4
+        'CONST_SIM_LONG'        : 100000,     # ile wielkosci N ma liczyc
+        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_lazy_meanK',
+        'CONST_MODEL'           : 'lazy',
+        # 'CONST_LAZY_CUT'        : 0.003,
+        'CONST_MODEL_BASIC_VAL' : 'CONST_MEAN_k',
+        'CONST_NETWORK_MODEL'   : 'erdos',
+        # 'CONST_BARABASI_m'      : 4
     }
 
-    k = 24
+    k = 22
     START, STOP, STEP = 0.05, 0.05, 0.05
     for p in np.arange(START,STOP + STEP,STEP):
-        stg['CONST_START_MAGNETIZATION'] = 0.5
+        # stg['CONST_START_MAGNETIZATION'] = 0.5
         stg['CONST_EDGES']  = int(round(k * stg['CONST_VERTICES'] // 2, 0)) #~ Ilosc polaczen
         stg['CONST_MEAN_k'] = round(stg['CONST_EDGES']/stg['CONST_VERTICES']*2, 1)
         jedna_symulacja(stg)
