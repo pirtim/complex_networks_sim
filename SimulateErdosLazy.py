@@ -95,7 +95,7 @@ def ER_lazy_time(p):
             'CONST_VERTICES'  : 10000,  #~ Ilosc wezlow
             'CONST_SIM_COUNT' : 1,      #~ Ilosc powtorzen symulacji
             'CONST_SIM_LONG'  : 100000,  # ile wielkosci N ma liczyc            
-            'CONST_PATH_BASIC_FOLDER' : 'Wyniki_lazy_meanK',
+            'CONST_PATH_BASIC_FOLDER' : 'now/complex_networks_sim/Wyniki_lazy_meanK',
             'CONST_MODEL'             : 'lazy',  
             'CONST_MODEL_BASIC_VAL'   : 'CONST_MEAN_k',
             'CONST_NETWORK_MODEL'     : 'erdos',
