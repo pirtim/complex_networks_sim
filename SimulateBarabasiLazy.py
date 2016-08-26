@@ -11,7 +11,7 @@ def BA_lazy_faz(p):
             'CONST_VERTICES'  : 1000,    #~ Ilosc wezlow
             'CONST_SIM_COUNT' : 1,      #~ Ilosc powtorzen symulacji
             'CONST_SIM_LONG'  : 500,     # ile wielkosci N ma liczyc            
-            'CONST_PATH_BASIC_FOLDER' : '~/now/complex_networks_sim/Wyniki_barabasi_lazy_fazowe',
+            'CONST_PATH_BASIC_FOLDER' : 'now/complex_networks_sim/Wyniki_barabasi_lazy_fazowe',
             'CONST_MODEL'             : 'lazy',  
             'CONST_MODEL_BASIC_VAL'   : 'CONST_START_MAGNETIZATION',
             'CONST_NETWORK_MODEL'     : 'barabasi',
