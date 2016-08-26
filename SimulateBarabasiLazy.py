@@ -89,7 +89,7 @@ def BA_clique_normal(p):
 def main():
     clients = ipp.Client()
     dview = clients.load_balanced_view()
-    tasks = [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5,0.55, 0.6,0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 0.10]*100
+    tasks = [1.0]+[0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5,0.55, 0.6,0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95]*100
     results = dview.map(BA_lazy_faz(None), tasks)
     print list(results) 
     # results = dview.map(BA_lazy_faz(None), [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5]*8)
