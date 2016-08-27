@@ -89,7 +89,7 @@ if __name__ == '__main__':
         'CONST_OVERRIDEN' : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow   
         'CONST_DUMP'      : True,   # czy ma zrzucac wektory wynikow 
         'CONST_PATH_BASIC_FOLDER' : 'Wyniki_barabasi_lazy_fazowe',
-        'CONST_MEAN_k'    : 77,
+        # 'CONST_MEAN_k'    : 77,
         'CONST_PATH_WYK'  : 'faz_dla_lazy_bar'
     }
 
