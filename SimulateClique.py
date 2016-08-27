@@ -154,6 +154,37 @@ def inicjalizacja(stg):
         KlikList = None    
     return j, g, M, Mlist, KlikList
 
+def MCS_steps_clique_refactor(j, g, Mlist,  KlikList, stg):    
+    '''Glowna petla jednego kroku (MCS)
+    first refactoring'''
+    KlikListDir = {}
+
+    for klik in KlikList:
+        itClique = itertools.cycle(range(stg['CONST_CLIQUE']))
+        itClique.next()
+        neighbors = []
+        for d in range(stg['CONST_CLIQUE']): #~ Wykonanie testowego modelu
+            neighbors.append(set(g.neighbors(klik[d])).intersection(g.neighbors(klik[itClique.next()])))
+        KlikListDir[klik] = set().union(*neighbors)
+    keys = KlikListDir.keys()
+
+    stg['WYN_TIME_OF_KlikListDir_s'] = (dt.datetime.now() - stg['WYN_start_time']).total_seconds()
+    while True: 
+        ranTroj = random.choice(keys) #~ Wybieramy losowa trojke
+        stanKliki = 0
+        for l in ranTroj: #~ Ustalamy stan kliki
+            stanKliki += g.vs[l]['stan']
+            stanKliki //= stg['CONST_CLIQUE'] #~ stanKliki -> {0,1}
+        
+        if stanKliki in (0, 1): 
+            for k in KlikListDir[ranTroj]:
+                 g.vs[k]['stan'] = stanKliki
+
+        j += 1 #~ Licznik MCS
+        if zapisz_magnetyzacje_i_end_check_clique(j, Mlist, g, stg): break #~ Wyjscie z MCS
+    return j
+
+
 def MCS_steps_clique(j, g, Mlist,  KlikList, stg):    
     'Glowna petla jednego kroku (MCS)'
     while True: 
@@ -224,22 +255,28 @@ def get_model_val(stg):
 def jedna_symulacja(stg):
     'Petla po powtorzeniach symulacji dla roznych grafow'
     for i in range(stg['CONST_SIM_COUNT']):
-        start_time = dt.datetime.now()
+        stg['WYN_start_time'] = dt.datetime.now()
 
         print '\nRozpoczynam symulacje nr:', i, 'dla: '
         j, g, M, Mlist, KlikList = inicjalizacja(stg)     
         wypiszDane(g, KlikList, stg)
+        stg['WYN_TIME_OF_INIT_s'] = (dt.datetime.now() - stg['WYN_start_time']).total_seconds()        
         if stg['CONST_MODEL'] == 'clique':
             if not czySaKliki(KlikList):
                 print 'Brak klik - Koniec'
                 break
-            j = MCS_steps_clique(j, g, Mlist,  KlikList, stg)
+            if 'CONST_REFACTOR' in stg and stg['CONST_REFACTOR']:
+                j = MCS_steps_clique_refactor(j, g, Mlist,  KlikList, stg)
+            else:
+                j = MCS_steps_clique(j, g, Mlist,  KlikList, stg)
         elif stg['CONST_MODEL'] == 'lazy':
             j = MCS_steps_lazy(j, g, Mlist,  KlikList, stg)
         else:
             raise ValueError('Wrong model type.')
         print 'Magnetyzacja koncowa', j, ' : ', Mlist[-1]
-        stg['WYN_TIME_OF_COMPUTING_s'] = (dt.datetime.now() - start_time).total_seconds()
+        stg['WYN_TIME_OF_COMPUTING_s'] = (dt.datetime.now() - stg['WYN_start_time']).total_seconds()
+        stg['WYN_start_time'] = stg['WYN_start_time'].strftime("%Y-%m-%d %H:%M:%S")
+
         zapisywanie_danych(j, g, Mlist[-1], Mlist, KlikList, stg)
         del g
     print 'Koniec jednej symulacji'
@@ -252,26 +289,29 @@ if __name__ == '__main__':
     rc('font', family='Arial') #Plotowanie polskich liter
     #~ Definicje stalych symulacji
     stg = {
-        # 'CONST_CLIQUE'          : 3,      #~ Wielkosc kliki
+        'CONST_CLIQUE'          : 3,      #~ Wielkosc kliki
         'CONST_VERTICES'        : 1000,    #~ Ilosc wezlow
-        'CONST_SIM_COUNT'       : 10000,      #~ Ilosc powtorzen symulacji
+        'CONST_SIM_COUNT'       : 1,      #~ Ilosc powtorzen symulacji
         'CONST_PRINT'           : False,  #~ Czy drukowac magnetyzacje co CONST_VERTICES krokow?
         # 'CONST_TIME'          : False,   #~ Czy przeprowadzac i drukowac wyniki diagnostyki?
         # 'CONST_FOLDER'        : "",     #~ Nic nie robi
-        'CONST_PLOT'            : False,
+        'CONST_PLOT'            : True,
         'CONST_OVERRIDEN'       : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow
         # 'CONST_COMPRESS'      : True,   #~ Czy ma kompresowac dane przez zapisem    
-        'CONST_SIM_LONG'        : 100000,     # ile wielkosci N ma liczyc
-        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_lazy_meanK',
-        'CONST_MODEL'           : 'lazy',
+        'CONST_SIM_LONG'        : 1000,     # ile wielkosci N ma liczyc
+        # 'CONST_PATH_BASIC_FOLDER' : 'Wyniki_lazy_meanK',
+        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_clique_meanK',
+        # 'CONST_MODEL'           : 'lazy',
+        'CONST_MODEL'           : 'clique',
         # 'CONST_LAZY_CUT'        : 0.003,
         'CONST_MODEL_BASIC_VAL' : 'CONST_MEAN_k',
         'CONST_NETWORK_MODEL'   : 'erdos',
-        # 'CONST_BARABASI_m'      : 4
+        # 'CONST_BARABASI_m'      : 4,
+        'CONST_REFACTOR'        : True,
     }
 
-    k = 22
-    START, STOP, STEP = 0.05, 0.05, 0.05
+    k = 24
+    START, STOP, STEP = 0.05, 0.04, 0.05
     for p in np.arange(START,STOP + STEP,STEP):
         # stg['CONST_START_MAGNETIZATION'] = 0.5
         stg['CONST_EDGES']  = int(round(k * stg['CONST_VERTICES'] // 2, 0)) #~ Ilosc polaczen

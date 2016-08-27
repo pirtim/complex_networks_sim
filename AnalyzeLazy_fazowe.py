@@ -11,23 +11,7 @@ import os.path            #~ Do sprawdzania istnienia plikow
 import numpy as np        #~ Do operacjach na array
 import cPickle as pickle
 import json
-from FilesManagment import CheckFolder
-        
-#~ Funkcja bierze liste i odwraca tam gdzie sa mniejsze niz 0.5        
-def OdwrocMniejsze(lista):
-    retlista = np.array(lista)
-    if retlista[-1] < 0.5:
-        retlista = 1 - retlista
-        # [1-x for x in lista]
-    return list(retlista)
-
-#~ Funkcja bierze liste i przedloza ja zerami lub jedynkami do zadanej wielkosci
-def PrzedlozDo(lista, doIle):
-    lenLista = len(lista)
-    if lista[-1] > 0.995:
-        return np.pad(lista, (0,doIle - lenLista),'constant', constant_values=(1))
-    else:
-        return np.pad(lista, (0,doIle - lenLista),'constant', constant_values=(0))    
+from FilesManagment import CheckFolder    
 
 def plotuj(stg, data):
     fig = plt.figure()
@@ -35,10 +19,18 @@ def plotuj(stg, data):
     plt.ylim(0,1)
     plt.xlim(0,1)
     plt.ylabel('Prawdopodobienstwo uzyskanie koncowego stanu sieci *w gore*')
-    plt.xlabel('Poczatkowa magnetyzacja, N=1000')
+    plt.xlabel('Poczatkowa magnetyzacja, N={}'.format(stg['CONST_VERTICES']))
     fig.suptitle('Zaleznosc koncowej magnetyzacji od sredniego stopnia wierzcholkow sieci')
     fig.savefig(os.path.join(stg['CONST_STANDARD_PATH_ANALYZE'], stg['CONST_PATH_WYK'].format() + '.png'), dpi = 200)
     fig.clf()
+
+def check_file(dic, stg):
+    stan = True
+    if 'CONST_VERTICES' in stg:
+        stan = stan and stg['CONST_VERTICES'] == dic['CONST_VERTICES']
+    if 'CONST_MEAN_k' in stg:
+        stan = stan and stg['CONST_MEAN_k'] == dic['CONST_MEAN_k']
+    return stan
 
 def check_folder_k(spin, path_file, basic_dir, stg):
     path_k = os.path.join(basic_dir, path_file, 'k{}'.format(spin))
@@ -58,7 +50,8 @@ def check_folder_simple(path_file, basic_dir, stg):
         for path_opis in filter(lambda name: name.endswith('.json'), os.listdir(path)):
             with open(os.path.join(path, path_opis), 'r') as f:
                 dic = json.load(f)
-            if dic['CONST_VERTICES'] == stg['CONST_VERTICES'] and dic['CONST_MEAN_k'] == stg['CONST_MEAN_k']:
+            if check_file(dic, stg):
+            # if dic['CONST_VERTICES'] == stg['CONST_VERTICES'] and dic['CONST_MEAN_k'] == stg['CONST_MEAN_k']:
                 if dic['WYN_M'] == 0:
                     down += 1
                 elif dic['WYN_M'] == 1:
@@ -91,13 +84,13 @@ if __name__ == '__main__':
     # rc('font', family='Arial') #Plotowanie polskich liter
     #~ Definicje stalych symulacji
     stg = {
-        # 'CONST_CLIQUE'    : 3,      #~ Wielkosc kliki
-        'CONST_VERTICES'  : 1000,   #~ Ilosc wezlow
+        # 'CONST_CLIQUE'  : 3,    #~ Wielkosc kliki
+        'CONST_VERTICES'  : 10000,  #~ Ilosc wezlow
         'CONST_OVERRIDEN' : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow   
         'CONST_DUMP'      : True,   # czy ma zrzucac wektory wynikow 
-        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_lazy_fazowe',
-        'CONST_MEAN_k'    : 24,
-        'CONST_PATH_WYK'  : 'faz_dla_lazy'
+        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_barabasi_lazy_fazowe',
+        'CONST_MEAN_k'    : 77,
+        'CONST_PATH_WYK'  : 'faz_dla_lazy_bar'
     }
 
     analyze(stg)
