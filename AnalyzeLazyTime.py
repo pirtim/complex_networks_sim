@@ -104,14 +104,16 @@ def analyze(stg):
     wyn_x = []
     # x, y = [], []
     basic_dir = stg['CONST_SHORT_RAW_PATH']
+    if 'CONST_FAZOWE' in stg and stg['CONST_FAZOWE']:
+        for path_file in sorted(os.listdir(basic_dir)):
+            basic_dir_inner = os.path.join(basic_dir, path_file)
+            for path_file_inner in sorted(os.listdir(basic_dir_inner)):
+                check_folder_time(wyn_xy, wyn_x, path_file_inner, basic_dir_inner, stg)
+
     for path_file in sorted(os.listdir(basic_dir)):
         check_folder_time(wyn_xy, wyn_x, path_file, basic_dir, stg)
-        # if up + down != 0:
-        #     x.append(float(path_file[-7:]))
-        #     y.append(up/(up+down))
 # H:\Dropbox\Studia\licencjat\Symulacje2016.07.07\complex_networks_sim\Wyniki_lazy_fazowe\RawDataMag\val_start_0.50000
 
-    # wynik = (x,y)
     if stg['CONST_DUMP']:
         with open(os.path.join(stg['CONST_STANDARD_PATH_ANALYZE'], stg['CONST_PATH_WYK'] + '.data') , 'w') as f:
             f.writelines(str(wyn_xy))
@@ -128,12 +130,13 @@ if __name__ == '__main__':
     #~ Definicje stalych symulacji
     stg = {
         # 'CONST_CLIQUE'    : 3,      #~ Wielkosc kliki
-        # 'CONST_VERTICES'  : 1000,   #~ Ilosc wezlow
+        'CONST_VERTICES'  : 10000,   #~ Ilosc wezlow
         'CONST_OVERRIDEN' : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow   
         'CONST_DUMP'      : True,   # czy ma zrzucac wektory wynikow 
-        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_lazy_meanK',
-        'CONST_MEAN_k'    : 22,
-        'CONST_PATH_WYK'  : 'time_dla_lazy'
+        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_barabasi_lazy_fazowe',
+        # 'CONST_MEAN_k'    : 22,
+        'CONST_PATH_WYK'  : 'time_dla_barabasi_lazy_fazowe',
+        'CONST_FAZOWE'    : True,
     }
 
     analyze(stg)

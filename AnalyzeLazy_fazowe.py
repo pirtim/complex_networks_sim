@@ -16,8 +16,14 @@ from FilesManagment import CheckFolder
 def plotuj(stg, data):
     fig = plt.figure()
     plt.plot(data[0], data[1], '--o')
-    plt.ylim(0,1)
-    plt.xlim(0,1)
+    if stg['upper']:
+        plt.ylim(0.5,1)
+        plt.xlim(0.5,1)
+    else:
+        plt.ylim(0,1)
+        plt.xlim(0,1)
+    plt.grid()
+    plt.plot((0,1),(0,1),'--')
     plt.ylabel('Prawdopodobienstwo uzyskanie koncowego stanu sieci *w gore*')
     plt.xlabel('Poczatkowa magnetyzacja, N={}'.format(stg['CONST_VERTICES']))
     fig.suptitle('Zaleznosc koncowej magnetyzacji od sredniego stopnia wierzcholkow sieci')
@@ -79,6 +85,37 @@ def analyze(stg):
             f.writelines(str(wynik))
     plotuj(stg, wynik)
 
+def analyze_fast():
+    stg = {
+        # 'CONST_CLIQUE'  : 3,    #~ Wielkosc kliki
+        'CONST_VERTICES'  : 10000,  #~ Ilosc wezlow
+        'CONST_OVERRIDEN' : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow   
+        'CONST_DUMP'      : True,   # czy ma zrzucac wektory wynikow 
+        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_barabasi_lazy_fazowe',
+        # 'CONST_MEAN_k'    : 77,
+        'CONST_PATH_WYK'  : 'faz_dla_lazy_bar',
+        'upper' : False
+        
+    }
+
+    stg['CONST_STANDARD_PATH_ANALYZE'] = os.path.join(stg['CONST_PATH_BASIC_FOLDER'], 'analyze')
+    CheckFolder(stg['CONST_STANDARD_PATH_ANALYZE'])
+    stg['CONST_SHORT_RAW_PATH'] = os.path.join(stg['CONST_PATH_BASIC_FOLDER'], 'RawDataMag')
+
+    wynik = ([0.0,0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0], [0.0,0.014705882352941176, 0.033707865168539325, 0.10144927536231885, 0.21052631578947367, 0.23529411764705882, 0.34615384615384615, 0.36363636363636365, 0.32894736842105265, 0.4852941176470588, 0.5256410256410257, 0.5909090909090909, 0.4935064935064935, 0.7391304347826086, 0.6438356164383562, 0.8059701492537313, 0.8648648648648649, 0.855072463768116, 0.9605263157894737, 0.9710144927536232, 1.0])
+
+    if stg['upper']:
+        wynik_np = np.array(wynik)
+        wynik_less = wynik_np[1][wynik_np[0] < 0.5]
+        wynik_less = np.array([0]+list((1-wynik_less)[::-1]))
+        wynik_up = wynik_np[1][wynik_np[0] >= 0.5]
+        wynik_up = (wynik_up+wynik_less) / 2  
+        wynik_up[0] *= 2
+        wynik = (list(wynik_np[0][wynik_np[0] >= 0.5]), list(wynik_up))
+
+    plotuj(stg, wynik)
+
+
 if __name__ == '__main__':
     # skrypt do analizowania przejscia fazowego
     # rc('font', family='Arial') #Plotowanie polskich liter
@@ -94,3 +131,4 @@ if __name__ == '__main__':
     }
 
     analyze(stg)
+
