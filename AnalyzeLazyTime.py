@@ -54,6 +54,7 @@ def plotuj(stg, data, type_plot):
     fig.suptitle('Histogram czasu trwania symulacji - {}.'.format(type_plot))
 
     fig.savefig(os.path.join(stg['CONST_STANDARD_PATH_ANALYZE'], stg['CONST_PATH_WYK']+'_{}'.format(type_plot) + '.png'), dpi = 200)
+    print 'Plotted to: {}'.format(os.path.join(stg['CONST_STANDARD_PATH_ANALYZE'], stg['CONST_PATH_WYK']+'_{}'.format(type_plot) + '.png'))
     fig.clf()
 
 def check_folder_k(spin, path_file, basic_dir, stg):
