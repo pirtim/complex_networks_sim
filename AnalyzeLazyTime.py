@@ -137,7 +137,7 @@ if __name__ == '__main__':
         'CONST_PATH_BASIC_FOLDER' : 'Wyniki_barabasi_lazy_fazowe',
         # 'CONST_MEAN_k'    : 22,
         'CONST_PATH_WYK'  : 'time_dla_barabasi_lazy_fazowe',
-        'CONST_FAZOWE'    : True,
+        'CONST_FAZOWE'    : False,
     }
 
     analyze(stg)
