@@ -43,7 +43,8 @@ def plotuj(stg, data, type_plot):
         # plt.hist(data, bins = 20, normed = True, log = True, histtype = 'step')
     elif type_plot == 'dirr':
         plt.plot(data.keys(), data.values(), 'o')
-    elif type_plot == 'log_norm':        
+    elif type_plot == 'log_norm':    
+        print np.log(np.array(data))
         plt.hist(np.log(np.array(data)), bins=40, normed = True)         
         plt.grid(True)
     else:
