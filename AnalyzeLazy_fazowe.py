@@ -36,6 +36,8 @@ def check_file(dic, stg):
         stan = stan and stg['CONST_VERTICES'] == dic['CONST_VERTICES']
     if 'CONST_MEAN_k' in stg:
         stan = stan and stg['CONST_MEAN_k'] == dic['CONST_MEAN_k']
+    if 'CONST_START_MAGNETIZATION' in stg:
+        stan = stan and stg['CONST_START_MAGNETIZATION'] == dic['CONST_START_MAGNETIZATION']
     return stan
 
 def check_folder_k(spin, path_file, basic_dir, stg):

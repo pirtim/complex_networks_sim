@@ -82,13 +82,23 @@ def check_folder_simple(path_file, basic_dir, stg):
                     up += 1
     return down, up
 
+def check_file(dic, stg):
+    stan = True
+    if 'CONST_VERTICES' in stg:
+        stan = stan and stg['CONST_VERTICES'] == dic['CONST_VERTICES']
+    if 'CONST_MEAN_k' in stg:
+        stan = stan and stg['CONST_MEAN_k'] == dic['CONST_MEAN_k']
+    if 'CONST_START_MAGNETIZATION' in stg:
+        stan = stan and stg['CONST_START_MAGNETIZATION'] == dic['CONST_START_MAGNETIZATION']
+    return stan
+
 def check_folder_time(wyn_xy, wyn_x, path_file, basic_dir, stg):
     path = os.path.join(basic_dir, path_file)
     if os.path.exists(path):
         for path_opis in filter(lambda name: name.endswith('.json'), os.listdir(path)):
             with open(os.path.join(path, path_opis), 'r') as f:
                 dic = json.load(f)  
-            if dic['CONST_SIM_LONG']*dic['CONST_VERTICES'] != dic['WYN_j']+1:
+            if dic['CONST_SIM_LONG']*dic['CONST_VERTICES'] != dic['WYN_j']+1 and check_file(dic, stg):
                 time = int(dic['WYN_j']/dic['CONST_VERTICES'])
                 wyn_x.append(time)
                 if time in wyn_xy:
@@ -137,7 +147,8 @@ if __name__ == '__main__':
         'CONST_PATH_BASIC_FOLDER' : 'Wyniki_barabasi_lazy_fazowe',
         # 'CONST_MEAN_k'    : 22,
         'CONST_PATH_WYK'  : 'time_dla_barabasi_lazy_fazowe',
-        'CONST_FAZOWE'    : False,
+        'CONST_FAZOWE'    : False,         
+        'CONST_START_MAGNETIZATION' : 0.5
     }
 
     analyze(stg)
