@@ -290,7 +290,7 @@ if __name__ == '__main__':
     #~ Definicje stalych symulacji
     stg = {
         'CONST_CLIQUE'          : 3,      #~ Wielkosc kliki
-        'CONST_VERTICES'        : 1000,    #~ Ilosc wezlow
+        'CONST_VERTICES'        : 10000,    #~ Ilosc wezlow
         'CONST_SIM_COUNT'       : 1,      #~ Ilosc powtorzen symulacji
         'CONST_PRINT'           : False,  #~ Czy drukowac magnetyzacje co CONST_VERTICES krokow?
         # 'CONST_TIME'          : False,   #~ Czy przeprowadzac i drukowac wyniki diagnostyki?
@@ -298,11 +298,11 @@ if __name__ == '__main__':
         'CONST_PLOT'            : True,
         'CONST_OVERRIDEN'       : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow
         # 'CONST_COMPRESS'      : True,   #~ Czy ma kompresowac dane przez zapisem    
-        'CONST_SIM_LONG'        : 1000,     # ile wielkosci N ma liczyc
+        'CONST_SIM_LONG'        : 100000,     # ile wielkosci N ma liczyc
         # 'CONST_PATH_BASIC_FOLDER' : 'Wyniki_lazy_meanK',
-        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_clique_meanK',
-        # 'CONST_MODEL'           : 'lazy',
-        'CONST_MODEL'           : 'clique',
+        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_lazy_meanK',
+        'CONST_MODEL'           : 'lazy',
+        # 'CONST_MODEL'           : 'clique',
         # 'CONST_LAZY_CUT'        : 0.003,
         'CONST_MODEL_BASIC_VAL' : 'CONST_MEAN_k',
         'CONST_NETWORK_MODEL'   : 'erdos',
@@ -310,7 +310,7 @@ if __name__ == '__main__':
         'CONST_REFACTOR'        : True,
     }
 
-    k = 24
+    k = 77
     START, STOP, STEP = 0.05, 0.04, 0.05
     for p in np.arange(START,STOP + STEP,STEP):
         # stg['CONST_START_MAGNETIZATION'] = 0.5

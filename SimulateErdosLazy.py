@@ -101,7 +101,7 @@ def ER_lazy_time(p):
             'CONST_NETWORK_MODEL'     : 'erdos',
         }
 
-        k = 77
+        k = 8
         stg['CONST_EDGES']  = int(round(k * stg['CONST_VERTICES'] // 2, 0)) #~ Ilosc polaczen
         stg['CONST_MEAN_k'] = round(stg['CONST_EDGES']/stg['CONST_VERTICES']*2, 1)    
         
