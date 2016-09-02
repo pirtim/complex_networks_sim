@@ -85,11 +85,18 @@ def check_folder_simple(path_file, basic_dir, stg):
 
 def check_file(dic, stg):
     stan = True
+
     if 'CONST_VERTICES' in stg:
+        if 'CONST_VERTICES' not in dic:
+            return False
         stan = stan and stg['CONST_VERTICES'] == dic['CONST_VERTICES']
     if 'CONST_MEAN_k' in stg:
+        if 'CONST_MEAN_k' not in dic:
+            return False
         stan = stan and stg['CONST_MEAN_k'] == dic['CONST_MEAN_k']
     if 'CONST_START_MAGNETIZATION' in stg:
+        if 'CONST_START_MAGNETIZATION' not in dic:
+            return False
         stan = stan and stg['CONST_START_MAGNETIZATION'] == dic['CONST_START_MAGNETIZATION']
     return stan
 
