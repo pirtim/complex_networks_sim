@@ -36,9 +36,9 @@ def BA_clique_faz(p):
             'CONST_CLIQUE'    : 3,  #~ Wielkosc kliki        
             'CONST_PRINT'     : False,  #~ Czy drukowac magnetyzacje co CONST_VERTICES krokow?
             'CONST_OVERRIDEN' : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow 
-            'CONST_VERTICES'  : 100000,  #~ Ilosc wezlow
+            'CONST_VERTICES'  : 10000,  #~ Ilosc wezlow
             'CONST_SIM_COUNT' : 1,      #~ Ilosc powtorzen symulacji
-            'CONST_SIM_LONG'  : 20,  # ile wielkosci N ma liczyc            
+            'CONST_SIM_LONG'  : 1,  # ile wielkosci N ma liczyc            
             'CONST_PATH_BASIC_FOLDER' : 'now/complex_networks_sim/Wyniki_barabasi_clique_fazowe',
             'CONST_MODEL'             : 'clique',  
             'CONST_MODEL_BASIC_VAL'   : 'CONST_START_MAGNETIZATION',

@@ -111,6 +111,41 @@ def example_lazy():
     crop_image(filepath_plot)
     print 'Cropped {}'.format(filepath_plot)
 
+def example_clique():
+    stg_er = {
+        'CONST_PATH_BASIC_FOLDER' : r'.\..\get_ssh_data\WynikiERtime\RawDataMag\val_start_8.00000',
+        'FILE_NUM' : 794,    
+        'DIR_PLOT' : 'Wykresy',
+        'PATH_PLOT' : 'exampleERlazy_k8.png'
+    }
+
+    stg_ba = {
+        'CONST_PATH_BASIC_FOLDER' : r'.\..\get_ssh_data\WynikiBAtime\RawDataMag\val_start_0.50000',
+        'FILE_NUM' : 504,    
+        'DIR_PLOT' : 'Wykresy',
+        'PATH_PLOT' : 'exampleERlazy_k8.png'
+    }
+
+    er_x, er_y, filepath_plot = get_data_set(stg_er)
+    ba_x, ba_y, filepath_plot = get_data_set(stg_ba)
+
+
+    rc('font', family='Arial') #Plotowanie polskich liter
+    fig = plt.figure()
+    plt.plot(er_x, er_y, label = u'Sieć ER, $N = 10^4, \\langle k \\rangle = 8$ ')
+    plt.plot(ba_x, ba_y, label = u'Sieć BA, $N = 10^4, m = 4$ ')
+    plt.ylabel(u'Magnetyzacja $m$')
+    plt.xlabel(u'Krok symulacji w ilościach $N$')
+    plt.ylim(-1,1)
+    plt.legend(loc=4)
+    plt.grid(True)
+    plt.title(u'Przykładowy przebieg symulacji dla modelu ,,leniwego\'\'')
+    plt.rcParams['figure.figsize'] = np.array([5,4])*1.5 
+    fig.savefig(filepath_plot, dpi = 140)
+    print 'Plotted to: {}'.format(filepath_plot)
+    crop_image(filepath_plot)
+    print 'Cropped {}'.format(filepath_plot)
+
 def lazy_phase():
     stg_er = {
         'CONST_PATH_BASIC_FOLDER' : r'Wyniki_lazy_fazowe\analyze',
@@ -164,23 +199,21 @@ def clique_phase():
 
     # dane z innego pliku tekstowego
     er_x, er_y = ([0.45, 0.46, 0.47, 0.48, 0.49, 0.5, 0.51, 0.52, 0.53, 0.54, 0.55, 0.56], [0.0, 0.0, 0.0, 0.0, 0.1875, 0.625, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
-    filepath_plot = os.path.join(Wykresy, 'clique_phase.png')
+    filepath_plot = os.path.join('Wykresy', 'clique_phase.png')
 
     # dane z innego pliku tekstowego
     ba_x, ba_y = ([0.45, 0.46, 0.47, 0.48, 0.49, 0.5, 0.51, 0.52, 0.53, 0.54, 0.55, 0.56], [0.0, 0.0, 0.0, 0.0, 0.0, 0.512, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
 
-    ba_x, ba_y, filepath_plot = get_data_set(stg_ba, number = False, just_data = True, phase = True)
-
     rc('font', family='Arial') #Plotowanie polskich liter
     fig = plt.figure()    
-    plt.plot(er_x, er_y, 'o--', label = u'Sieć ER, $N = 6 \times 10^4, \\langle k \\rangle = 77$ ')
-    plt.plot(ba_x, ba_y, 'o--', label = u'Sieć BA, $N = 10^5, m = 11$ ')    
-    plt.plot([0,1], '-', label = u'Zależność $P_+(p_+) = p_+$ ')
+    plt.plot(er_x, er_y, 'o--', label = u'Sieć ER, $N = 6$ x $10^3$,\n $\\langle k \\rangle = 77$')
+    plt.plot(ba_x, ba_y, 'o--', label = u'Sieć BA, $N = 10^5$,\n $m = 12$')   
+    # plt.plot([0,1], '-', label = u'Zależność $P_+(p_+) = p_+$ ')
     plt.ylabel(u'Prawdopodobieństwo wyjścia $P_+$')
     plt.xlabel(u'Początkowa część węzłów ze spinem +1, $p_+$')
     plt.ylim(0,1)
     plt.xlim(0,1)
-    plt.legend(loc=4)
+    plt.legend(loc=2)
     plt.grid(True)
     plt.title(u'Prawdopodobieństwo wyjścia dla modelu ,,klikowego\'\'')
     plt.rcParams['figure.figsize'] = np.array([5,4])*1.5 
@@ -190,6 +223,5 @@ def clique_phase():
     print 'Cropped {}'.format(filepath_plot)
 
 
-
 if '__main__' == __name__:
-    lazy_phase()
+    clique_phase()
