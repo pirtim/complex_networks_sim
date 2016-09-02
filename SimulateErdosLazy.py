@@ -122,7 +122,7 @@ def main():
     # results = dview.map(BA_lazy_faz(None), [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5]*8)
     # print list(results)
     results = dview.map(BA_clique_faz(None), [0.49, 0.5, 0.51, 0.48, 0.52]*20)
-    # print list(results)
+    print list(results)
     print 'Koniec Programu'
 
 if __name__ == '__main__':
