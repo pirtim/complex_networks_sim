@@ -11,7 +11,7 @@ import os.path            #~ Do sprawdzania istnienia plikow
 import numpy as np        #~ Do operacjach na array
 import cPickle as pickle
 import json
-from FilesManagment import CheckFolder
+from FilesManagment import CheckFolder, CompressData   
         
 #~ Funkcja bierze liste i odwraca tam gdzie sa mniejsze niz 0.5        
 def OdwrocMniejsze(lista):
@@ -136,6 +136,8 @@ def analyze(stg):
 # H:\Dropbox\Studia\licencjat\Symulacje2016.07.07\complex_networks_sim\Wyniki_lazy_fazowe\RawDataMag\val_start_0.50000
 
     if stg['CONST_DUMP']:
+        CompressData(wyn_xy, os.path.join(stg['CONST_STANDARD_PATH_ANALYZE'], stg['CONST_PATH_WYK']), pickling=True)
+
         with open(os.path.join(stg['CONST_STANDARD_PATH_ANALYZE'], stg['CONST_PATH_WYK'] + '.data') , 'w') as f:
             f.writelines(str(wyn_xy))    
     print len(wyn_x)
@@ -150,16 +152,16 @@ if __name__ == '__main__':
     # rc('font', family='Arial') #Plotowanie polskich liter
     #~ Definicje stalych symulacji
     stg = {
-        # 'CONST_CLIQUE'    : 3,      #~ Wielkosc kliki
+        # 'CONST_CLIQUE'  : 3,      #~ Wielkosc kliki
         'CONST_VERTICES'  : 10000,   #~ Ilosc wezlow
         'CONST_OVERRIDEN' : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow   
         'CONST_DUMP'      : True,   # czy ma zrzucac wektory wynikow 
         # 'CONST_PATH_BASIC_FOLDER' : 'Wyniki_barabasi_lazy_fazowe',
-        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_lazy_meanK',
-        'CONST_MEAN_k'    : 8.0,
+        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_barabasi_lazy_fazowe',
+        # 'CONST_MEAN_k'    : 22.0,
         'CONST_PATH_WYK'  : 'time_dla_er_lazy_fazowe_k8',
         'CONST_FAZOWE'    : False,         
-        # 'CONST_START_MAGNETIZATION' : 0.5
+        'CONST_START_MAGNETIZATION' : 0.5
     }
 
     analyze(stg)
