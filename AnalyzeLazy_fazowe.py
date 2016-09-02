@@ -16,7 +16,7 @@ from FilesManagment import CheckFolder, CompressData
 def plotuj(stg, data):
     fig = plt.figure()
     plt.plot(data[0], data[1], '--o')
-    if stg['upper']:
+    if 'upper' in stg and stg['upper']:
         plt.ylim(0.5,1)
         plt.xlim(0.5,1)
     else:
