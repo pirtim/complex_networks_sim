@@ -11,7 +11,7 @@ import os.path            #~ Do sprawdzania istnienia plikow
 import numpy as np        #~ Do operacjach na array
 import cPickle as pickle
 import json
-from FilesManagment import CheckFolder    
+from FilesManagment import CheckFolder, CompressData    
 
 def plotuj(stg, data):
     fig = plt.figure()
@@ -33,10 +33,16 @@ def plotuj(stg, data):
 def check_file(dic, stg):
     stan = True
     if 'CONST_VERTICES' in stg:
+        if 'CONST_VERTICES' not in dic:
+            return False
         stan = stan and stg['CONST_VERTICES'] == dic['CONST_VERTICES']
     if 'CONST_MEAN_k' in stg:
+        if 'CONST_MEAN_k' not in dic:
+            return False
         stan = stan and stg['CONST_MEAN_k'] == dic['CONST_MEAN_k']
     if 'CONST_START_MAGNETIZATION' in stg:
+        if 'CONST_START_MAGNETIZATION' not in dic:
+            return False
         stan = stan and stg['CONST_START_MAGNETIZATION'] == dic['CONST_START_MAGNETIZATION']
     return stan
 
@@ -83,6 +89,8 @@ def analyze(stg):
     wynik = (x,y)
     print wynik
     if stg['CONST_DUMP']:
+        CompressData(wynik, os.path.join(stg['CONST_STANDARD_PATH_ANALYZE'], stg['CONST_PATH_WYK']), pickling=True)
+
         with open(os.path.join(stg['CONST_STANDARD_PATH_ANALYZE'], stg['CONST_PATH_WYK'] + '.data') , 'w') as f:
             f.writelines(str(wynik))
     plotuj(stg, wynik)
@@ -93,11 +101,10 @@ def analyze_fast():
         'CONST_VERTICES'  : 10000,  #~ Ilosc wezlow
         'CONST_OVERRIDEN' : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow   
         'CONST_DUMP'      : True,   # czy ma zrzucac wektory wynikow 
-        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_barabasi_lazy_fazowe',
-        # 'CONST_MEAN_k'    : 77,
+        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_lazy_fazowe',
+        'CONST_MEAN_k'    : 77,
         'CONST_PATH_WYK'  : 'faz_dla_lazy_bar',
-        'upper' : False
-        
+        'upper' : False        
     }
 
     stg['CONST_STANDARD_PATH_ANALYZE'] = os.path.join(stg['CONST_PATH_BASIC_FOLDER'], 'analyze')
@@ -127,8 +134,8 @@ if __name__ == '__main__':
         'CONST_VERTICES'  : 10000,  #~ Ilosc wezlow
         'CONST_OVERRIDEN' : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow   
         'CONST_DUMP'      : True,   # czy ma zrzucac wektory wynikow 
-        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_barabasi_lazy_fazowe',
-        # 'CONST_MEAN_k'    : 77,
+        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_lazy_fazowe',
+        'CONST_MEAN_k'    : 77,
         'CONST_PATH_WYK'  : 'faz_dla_lazy_bar'
     }
 
