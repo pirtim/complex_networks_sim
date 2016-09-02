@@ -154,10 +154,10 @@ if __name__ == '__main__':
         'CONST_DUMP'      : True,   # czy ma zrzucac wektory wynikow 
         # 'CONST_PATH_BASIC_FOLDER' : 'Wyniki_barabasi_lazy_fazowe',
         'CONST_PATH_BASIC_FOLDER' : 'Wyniki_lazy_meanK',
-        'CONST_MEAN_k'    : 8,
+        'CONST_MEAN_k'    : 8.0,
         'CONST_PATH_WYK'  : 'time_dla_er_lazy_fazowe_k8',
         'CONST_FAZOWE'    : False,         
-        'CONST_START_MAGNETIZATION' : 0.5
+        # 'CONST_START_MAGNETIZATION' : 0.5
     }
 
     analyze(stg)
