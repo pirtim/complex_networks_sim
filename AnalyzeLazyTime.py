@@ -135,13 +135,13 @@ def analyze(stg):
 
     if stg['CONST_DUMP']:
         with open(os.path.join(stg['CONST_STANDARD_PATH_ANALYZE'], stg['CONST_PATH_WYK'] + '.data') , 'w') as f:
-            f.writelines(str(wyn_xy))
+            f.writelines(str(wyn_xy))    
+    print len(wyn_x)
+    print sorted(wyn_xy.iteritems(), key=lambda (x, y): x)
     plotuj(stg, wyn_xy, 'dirr')
     plotuj(stg, wyn_x,  'hist')
     plotuj(stg, wyn_x,  'hist_log')
     plotuj(stg, wyn_x,  'log_norm')
-    print len(wyn_x)
-    print sorted(wyn_xy.iteritems(), key=lambda (x, y): x)
 
 if __name__ == '__main__':
     # skrypt do analizowania przejscia fazowego
