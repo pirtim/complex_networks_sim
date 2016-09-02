@@ -98,8 +98,8 @@ def check_file(dic, stg):
         if 'CONST_START_MAGNETIZATION' not in dic:
             return False
         stan = stan and stg['CONST_START_MAGNETIZATION'] == dic['CONST_START_MAGNETIZATION']
-    if not stan and dic['CONST_VERTICES'] == 10000:
-        print dic
+    # if not stan and dic['CONST_VERTICES'] == 10000:
+    #     print dic
     return stan
 
 def check_folder_time(wyn_xy, wyn_x, path_file, basic_dir, stg):
