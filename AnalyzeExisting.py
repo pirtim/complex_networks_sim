@@ -43,7 +43,7 @@ def loadDic(filepath):
 def M_na_m(l):
     return 2*l - 1
 
-def get_data_set(stg, number = True, just_data =False, phase = False):
+def get_data_set(stg, number = True, just_data =False, phase = False, time = False):
     if number:
         stg['PATH_DATA_NAME']= 'simResultsData{}.pickle'.format(stg['FILE_NUM'])
         stg['PATH_OPIS_NAME']= 'simResultsOpis{}.json'.format(stg['FILE_NUM'])
@@ -56,23 +56,26 @@ def get_data_set(stg, number = True, just_data =False, phase = False):
         filepath_opis = os.path.join(stg['CONST_PATH_BASIC_FOLDER'], stg['PATH_OPIS_NAME'])        
         print filepath_opis
 
-    wynik = loadList(filepath_data, string_form = not phase)
+    wynik = loadList(filepath_data, string_form = not phase and not time)
 
     if not just_data: 
         dic = loadDic(filepath_opis)
         
-    if not phase:
+    if not phase and not time:
         wynik_y = M_na_m(wynik)
         dt = dic['CONST_VERTICES']//100
         wynik_x = np.arange(0, len(wynik_y),1)*dt / dic['CONST_VERTICES']
-    else:
+    elif phase:
         wynik_x, wynik_y = wynik
         wynik_x = list(wynik_x)
         wynik_y = list(wynik_y)
         wynik_y = [y for (x,y) in sorted(zip(wynik_x, wynik_y), key=lambda pair: pair[0])]
         wynik_x = sorted(wynik_x)
+    elif time:
+        return wynik, filepath_plot
+
     
-    print len(wynik_x), len(wynik_y)
+    # print len(wynik_x), len(wynik_y)
     print wynik_x, wynik_y
     return wynik_x, wynik_y, filepath_plot
 
@@ -223,5 +226,54 @@ def clique_phase():
     print 'Cropped {}'.format(filepath_plot)
 
 
+def lazy_time():
+    def list_from_dir(d):
+        result = []
+        for key, value in d.iteritems():
+            for i in range(value):
+                result.append(key/100)
+        return result
+
+    stg_er = {
+        'CONST_PATH_BASIC_FOLDER' : r'Wyniki_lazy_meanK\analyze',
+        'PATH_DATA_NAME' : 'time_dla_er_lazy_fazowe_k8.pickle',
+        'DIR_PLOT' : 'Wykresy',
+        'PATH_PLOT' : 'lazy_time_1.png'
+    }
+
+    stg_ba = {
+        'CONST_PATH_BASIC_FOLDER' : r'.\..\get_ssh_data\WynikiBAtime\analyze',
+        'PATH_DATA_NAME' :  'time_dla_er_lazy_fazowe_k8.pickle',
+        'DIR_PLOT' : 'Wykresy',
+        'PATH_PLOT' : 'lazy_time_2.png'
+    }    
+
+    er, filepath_plot = get_data_set(stg_er, number = False, time = True, just_data=True)
+    ba, filepath_plot = get_data_set(stg_ba,  number = False,time = True, just_data=True)
+    # print er
+    # print
+    # print ba
+    er = list_from_dir(er)
+    ba = list_from_dir(ba)
+
+    rc('font', family='Arial') #Plotowanie polskich liter
+    fig = plt.figure()
+
+    plt.hist(er, bins=40, normed = True, label = 'er')
+    plt.hist(ba, bins=40, normed = True, label = 'ba')
+    # plt.plot(er_x, er_y, 'o--', label = u'Sieć ER, $N = 6$ x $10^3$,\n $\\langle k \\rangle = 77$')
+    # plt.plot(ba_x, ba_y, 'o--', label = u'Sieć BA, $N = 10^5$,\n $m = 12$')   
+    # plt.plot([0,1], '-', label = u'Zależność $P_+(p_+) = p_+$ ')
+    plt.ylabel(u'Prawdopodobieństwo $P_T(t)$')
+    plt.xlabel(u'Krok symulacji w ilościach $N$')
+    plt.legend(loc=2)
+    plt.grid(True)
+    plt.title(u'Rozkład czasów relaksacji dla modelu ,,leniwego\'\'')
+    plt.rcParams['figure.figsize'] = np.array([5,4])*1.5 
+    fig.savefig(filepath_plot, dpi = 140)
+    print 'Plotted to: {}'.format(filepath_plot)
+    crop_image(filepath_plot)
+    print 'Cropped {}'.format(filepath_plot)
+
 if '__main__' == __name__:
-    clique_phase()
+    lazy_time()
