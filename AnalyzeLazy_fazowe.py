@@ -98,11 +98,11 @@ def analyze(stg):
 def analyze_fast():
     stg = {
         # 'CONST_CLIQUE'  : 3,    #~ Wielkosc kliki
-        'CONST_VERTICES'  : 10000,  #~ Ilosc wezlow
+        'CONST_VERTICES'  : 1000,  #~ Ilosc wezlow
         'CONST_OVERRIDEN' : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow   
         'CONST_DUMP'      : True,   # czy ma zrzucac wektory wynikow 
         'CONST_PATH_BASIC_FOLDER' : 'Wyniki_lazy_fazowe',
-        'CONST_MEAN_k'    : 77,
+        'CONST_MEAN_k'    : 22,
         'CONST_PATH_WYK'  : 'faz_dla_lazy_bar',
         'upper' : False        
     }
@@ -134,9 +134,9 @@ if __name__ == '__main__':
         'CONST_VERTICES'  : 10000,  #~ Ilosc wezlow
         'CONST_OVERRIDEN' : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow   
         'CONST_DUMP'      : True,   # czy ma zrzucac wektory wynikow 
-        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_barabasi_lazy_fazowe',
+        'CONST_PATH_BASIC_FOLDER' : 'Wyniki_lazy_fazowe',
         # 'CONST_MEAN_k'    : 77,
-        'CONST_PATH_WYK'  : 'faz_dla_lazy_bar'
+        'CONST_PATH_WYK'  : 'faz_dla_lazy_er'
     }
 
     analyze(stg)
