@@ -36,14 +36,14 @@ def BA_clique_faz(p):
             'CONST_CLIQUE'    : 3,  #~ Wielkosc kliki        
             'CONST_PRINT'     : False,  #~ Czy drukowac magnetyzacje co CONST_VERTICES krokow?
             'CONST_OVERRIDEN' : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow 
-            'CONST_VERTICES'  : 10000,  #~ Ilosc wezlow
+            'CONST_VERTICES'  : 100000,  #~ Ilosc wezlow
             'CONST_SIM_COUNT' : 1,      #~ Ilosc powtorzen symulacji
             'CONST_SIM_LONG'  : 20,  # ile wielkosci N ma liczyc            
             'CONST_PATH_BASIC_FOLDER' : 'now/complex_networks_sim/Wyniki_barabasi_clique_fazowe',
             'CONST_MODEL'             : 'clique',  
             'CONST_MODEL_BASIC_VAL'   : 'CONST_START_MAGNETIZATION',
             'CONST_NETWORK_MODEL'     : 'barabasi',
-            'CONST_BARABASI_m'        : 4,            
+            'CONST_BARABASI_m'        : 12,            
             'CONST_START_MAGNETIZATION' : x
         }
 
@@ -117,11 +117,11 @@ def main():
     clients = ipp.Client()
     dview = clients.load_balanced_view()
 
-    results = dview.map(ER_lazy_time(None), [None]*10000)
-    print list(results) 
+    # results = dview.map(BA_clique_faz(None), [None]*10000)
+    # print list(results) 
     # results = dview.map(BA_lazy_faz(None), [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5]*8)
     # print list(results)
-    # results = dview.map(BA_clique_faz(None), [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5]*8)
+    results = dview.map(BA_clique_faz(None), [0.49, 0.5, 0.51, 0.48, 0.52]*20)
     # print list(results)
     print 'Koniec Programu'
 

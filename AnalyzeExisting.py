@@ -43,24 +43,37 @@ def loadDic(filepath):
 def M_na_m(l):
     return 2*l - 1
 
-def get_data_set(stg):
-    stg['PATH_DATA_NAME']= 'simResultsData{}.pickle'.format(stg['FILE_NUM'])
-    stg['PATH_OPIS_NAME']= 'simResultsOpis{}.json'.format(stg['FILE_NUM'])
+def get_data_set(stg, number = True, just_data =False, phase = False):
+    if number:
+        stg['PATH_DATA_NAME']= 'simResultsData{}.pickle'.format(stg['FILE_NUM'])
+        stg['PATH_OPIS_NAME']= 'simResultsOpis{}.json'.format(stg['FILE_NUM'])
 
-    filepath_data = os.path.join(stg['CONST_PATH_BASIC_FOLDER'], stg['PATH_DATA_NAME'])
-    filepath_opis = os.path.join(stg['CONST_PATH_BASIC_FOLDER'], stg['PATH_OPIS_NAME'])
+    filepath_data = os.path.join(stg['CONST_PATH_BASIC_FOLDER'], stg['PATH_DATA_NAME'])        
     filepath_plot = os.path.join(stg['DIR_PLOT'], stg['PATH_PLOT'])
     print filepath_data
-    print filepath_opis
+    
+    if not just_data:        
+        filepath_opis = os.path.join(stg['CONST_PATH_BASIC_FOLDER'], stg['PATH_OPIS_NAME'])        
+        print filepath_opis
 
-    wynik = loadList(filepath_data)
-    dic = loadDic(filepath_opis)
+    wynik = loadList(filepath_data, string_form = not phase)
 
-    wynik_y = M_na_m(wynik)
-    dt = dic['CONST_VERTICES']//100
-    wynik_x = np.arange(0, len(wynik_y),1)*dt / dic['CONST_VERTICES']
+    if not just_data: 
+        dic = loadDic(filepath_opis)
+        
+    if not phase:
+        wynik_y = M_na_m(wynik)
+        dt = dic['CONST_VERTICES']//100
+        wynik_x = np.arange(0, len(wynik_y),1)*dt / dic['CONST_VERTICES']
+    else:
+        wynik_x, wynik_y = wynik
+        wynik_x = list(wynik_x)
+        wynik_y = list(wynik_y)
+        wynik_y = [y for (x,y) in sorted(zip(wynik_x, wynik_y), key=lambda pair: pair[0])]
+        wynik_x = sorted(wynik_x)
+    
     print len(wynik_x), len(wynik_y)
-    print wynik_y
+    print wynik_x, wynik_y
     return wynik_x, wynik_y, filepath_plot
 
 def example_lazy():
@@ -100,32 +113,76 @@ def example_lazy():
 
 def lazy_phase():
     stg_er = {
-        'CONST_PATH_BASIC_FOLDER' : r'.\..\get_ssh_data\WynikiERtime\RawDataMag\val_start_8.00000',
-        'FILE_NUM' : 794,    
+        'CONST_PATH_BASIC_FOLDER' : r'Wyniki_lazy_fazowe\analyze',
+        'PATH_DATA_NAME' : 'faz_dla_lazy_er.pickle',
         'DIR_PLOT' : 'Wykresy',
-        'PATH_PLOT' : 'exampleERlazy_k8.png'
+        'PATH_PLOT' : 'lazy_phase.png'
     }
 
     stg_ba = {
-        'CONST_PATH_BASIC_FOLDER' : r'.\..\get_ssh_data\WynikiBAtime\RawDataMag\val_start_0.50000',
-        'FILE_NUM' : 504,    
+        'CONST_PATH_BASIC_FOLDER' : r'.\..\get_ssh_data\WynikiBAtime\analyze',
+        'PATH_DATA_NAME' :  'faz_dla_lazy_bar.pickle',
         'DIR_PLOT' : 'Wykresy',
-        'PATH_PLOT' : 'exampleERlazy_k8.png'
+        'PATH_PLOT' : 'lazy_phase.png'
     }
 
-    er_x, er_y, filepath_plot = get_data_set(stg_er)
-    ba_x, ba_y, filepath_plot = get_data_set(stg_ba)
+    er_x, er_y, filepath_plot = get_data_set(stg_er, number = False, just_data = True, phase = True)
+    ba_x, ba_y, filepath_plot = get_data_set(stg_ba, number = False, just_data = True, phase = True)
 
     rc('font', family='Arial') #Plotowanie polskich liter
-    fig = plt.figure()
-    plt.plot(er_x, er_y, label = u'Sieć ER, $N = 10^4, \\langle k \\rangle = 8$ ')
-    plt.plot(ba_x, ba_y, label = u'Sieć BA, $N = 10^4, m = 4$ ')
-    plt.ylabel(u'Magnetyzacja $m$')
-    plt.xlabel(u'Krok symulacji w ilościach $N$')
-    plt.ylim(-1,1)
+    fig = plt.figure()    
+    plt.plot(er_x, er_y, 'o--', label = u'Sieć ER, $N = 10^3, \\langle k \\rangle = 22$ ')
+    plt.plot(ba_x, ba_y, 'o--', label = u'Sieć BA, $N = 10^4, m = 4$ ')    
+    plt.plot([0,1], '-', label = u'Zależność $P_+(p_+) = p_+$ ')
+    plt.ylabel(u'Prawdopodobieństwo wyjścia $P_+$')
+    plt.xlabel(u'Początkowa część węzłów ze spinem +1, $p_+$')
+    plt.ylim(0,1)
+    plt.xlim(0,1)
     plt.legend(loc=4)
     plt.grid(True)
-    plt.title(u'Przykładowy przebieg symulacji dla modelu ,,leniwego\'\'')
+    plt.title(u'Prawdopodobieństwo wyjścia dla modelu ,,leniwego\'\'')
+    plt.rcParams['figure.figsize'] = np.array([5,4])*1.5 
+    fig.savefig(filepath_plot, dpi = 140)
+    print 'Plotted to: {}'.format(filepath_plot)
+    crop_image(filepath_plot)
+    print 'Cropped {}'.format(filepath_plot)
+
+def clique_phase():
+    stg_er = {
+        'CONST_PATH_BASIC_FOLDER' : r'Wyniki_clique_fazowe\analyze',
+        'PATH_DATA_NAME' : 'faz_dla_lazy_er.pickle',
+        'DIR_PLOT' : 'Wykresy',
+        'PATH_PLOT' : 'clique_phase.png'
+    }
+
+    stg_ba = {
+        'CONST_PATH_BASIC_FOLDER' : r'.\..\get_ssh_data\WynikiBAtime\analyze',
+        'PATH_DATA_NAME' :  'faz_dla_lazy_bar.pickle',
+        'DIR_PLOT' : 'Wykresy',
+        'PATH_PLOT' : 'clique_phase.png'
+    }
+
+    # dane z innego pliku tekstowego
+    er_x, er_y = ([0.45, 0.46, 0.47, 0.48, 0.49, 0.5, 0.51, 0.52, 0.53, 0.54, 0.55, 0.56], [0.0, 0.0, 0.0, 0.0, 0.1875, 0.625, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
+    filepath_plot = os.path.join(Wykresy, 'clique_phase.png')
+
+    # dane z innego pliku tekstowego
+    ba_x, ba_y = ([0.45, 0.46, 0.47, 0.48, 0.49, 0.5, 0.51, 0.52, 0.53, 0.54, 0.55, 0.56], [0.0, 0.0, 0.0, 0.0, 0.0, 0.512, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
+
+    ba_x, ba_y, filepath_plot = get_data_set(stg_ba, number = False, just_data = True, phase = True)
+
+    rc('font', family='Arial') #Plotowanie polskich liter
+    fig = plt.figure()    
+    plt.plot(er_x, er_y, 'o--', label = u'Sieć ER, $N = 6 \times 10^4, \\langle k \\rangle = 77$ ')
+    plt.plot(ba_x, ba_y, 'o--', label = u'Sieć BA, $N = 10^5, m = 11$ ')    
+    plt.plot([0,1], '-', label = u'Zależność $P_+(p_+) = p_+$ ')
+    plt.ylabel(u'Prawdopodobieństwo wyjścia $P_+$')
+    plt.xlabel(u'Początkowa część węzłów ze spinem +1, $p_+$')
+    plt.ylim(0,1)
+    plt.xlim(0,1)
+    plt.legend(loc=4)
+    plt.grid(True)
+    plt.title(u'Prawdopodobieństwo wyjścia dla modelu ,,klikowego\'\'')
     plt.rcParams['figure.figsize'] = np.array([5,4])*1.5 
     fig.savefig(filepath_plot, dpi = 140)
     print 'Plotted to: {}'.format(filepath_plot)
@@ -133,5 +190,6 @@ def lazy_phase():
     print 'Cropped {}'.format(filepath_plot)
 
 
+
 if '__main__' == __name__:
-    example_lazy()
+    lazy_phase()

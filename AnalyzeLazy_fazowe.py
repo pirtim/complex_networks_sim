@@ -86,7 +86,18 @@ def analyze(stg):
             y.append(up/(up+down))
 # H:\Dropbox\Studia\licencjat\Symulacje2016.07.07\complex_networks_sim\Wyniki_lazy_fazowe\RawDataMag\val_start_0.50000
 
-    wynik = (x,y)
+    wynik = (x,y)    
+
+    if 'upper' in stg and stg['upper']:
+        wynik_np = np.array(wynik)
+        wynik_less = wynik_np[1][wynik_np[0] < 0.5]
+        wynik_less = np.array(list((1-wynik_less)[::-1]))
+        wynik_up = wynik_np[1][wynik_np[0] >= 0.5]
+        wynik_up = (wynik_up+wynik_less) / 2  
+        wynik_up[0] *= 2
+        wynik = (list(wynik_np[0][wynik_np[0] >= 0.5]), list(wynik_up))
+        stg['CONST_PATH_WYK'] += '.upper'
+
     print wynik
     if stg['CONST_DUMP']:
         CompressData(wynik, os.path.join(stg['CONST_STANDARD_PATH_ANALYZE'], stg['CONST_PATH_WYK']), pickling=True)
@@ -131,12 +142,13 @@ if __name__ == '__main__':
     #~ Definicje stalych symulacji
     stg = {
         # 'CONST_CLIQUE'  : 3,    #~ Wielkosc kliki
-        'CONST_VERTICES'  : 10000,  #~ Ilosc wezlow
+        'CONST_VERTICES'  : 1000,  #~ Ilosc wezlow
         'CONST_OVERRIDEN' : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow   
         'CONST_DUMP'      : True,   # czy ma zrzucac wektory wynikow 
         'CONST_PATH_BASIC_FOLDER' : 'Wyniki_lazy_fazowe',
-        # 'CONST_MEAN_k'    : 77,
-        'CONST_PATH_WYK'  : 'faz_dla_lazy_er'
+        # 'CONST_MEAN_k'    : 22,
+        'CONST_PATH_WYK'  : 'faz_dla_lazy_er',
+        'upper' : True
     }
 
     analyze(stg)
