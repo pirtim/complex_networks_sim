@@ -1,9 +1,10 @@
+# -*- coding: utf-8 -*-
 from __future__ import division #~ Domysle dzielenie int jako liczb float
 # from igraph import *     #~ Niepotrzebne
 
 import random            #~ Niepotrzebne
 import matplotlib
-matplotlib.use('Agg')
+# matplotlib.use('Agg')
 import matplotlib.pyplot as plt #~ Do wykresow
 from  matplotlib import rc
 import time                #~ Niepotrzebne
@@ -12,7 +13,20 @@ import numpy as np        #~ Do operacjach na array
 import cPickle as pickle
 import json
 from FilesManagment import CheckFolder, CompressData   
-        
+from PIL import Image
+
+def crop_image(filepath):
+    image=Image.open(filepath)
+    image.load()
+    image_data = np.asarray(image)
+    image_data_bw = image_data.min(axis=2)
+    non_empty_columns = np.where(image_data_bw.min(axis=0)<255)[0]
+    non_empty_rows = np.where(image_data_bw.min(axis=1)<255)[0]
+    cropBox = (min(non_empty_rows), max(non_empty_rows), min(non_empty_columns), max(non_empty_columns))
+    image_data_new = image_data[cropBox[0]:cropBox[1]+1, cropBox[2]:cropBox[3]+1 , :]
+    new_image = Image.fromarray(image_data_new)
+    new_image.save(filepath)   
+
 #~ Funkcja bierze liste i odwraca tam gdzie sa mniejsze niz 0.5        
 def OdwrocMniejsze(lista):
     retlista = np.array(lista)
@@ -50,13 +64,15 @@ def plotuj(stg, data, type_plot):
     else:
         raise ValueError
 
-    plt.ylabel('Ilosc przypadkow')
-    plt.xlabel('Czasy')
-    fig.suptitle('Histogram czasu trwania symulacji - {}.'.format(type_plot))
+    plt.ylabel(u'Prawdopodobieństwo $P_T(t)$')
+    plt.xlabel(u'Zlogarytmowany krok symulacji w liczbach $N$')
+    # fig.suptitle('Histogram czasu trwania symulacji - {}.'.format(type_plot))
+    plt.title(u'Rozkład zlogarytowanych czasów relaksacji dla modelu ,,leniwego\'\'')
 
     fig.savefig(os.path.join(stg['CONST_STANDARD_PATH_ANALYZE'], stg['CONST_PATH_WYK']+'_{}'.format(type_plot) + '.png'), dpi = 200)
     print 'Plotted to: {}'.format(os.path.join(stg['CONST_STANDARD_PATH_ANALYZE'], stg['CONST_PATH_WYK']+'_{}'.format(type_plot) + '.png'))
     fig.clf()
+    crop_image(os.path.join(stg['CONST_STANDARD_PATH_ANALYZE'], stg['CONST_PATH_WYK']+'_{}'.format(type_plot) + '.png'))
 
 def check_folder_k(spin, path_file, basic_dir, stg):
     path_k = os.path.join(basic_dir, path_file, 'k{}'.format(spin))
@@ -149,19 +165,19 @@ def analyze(stg):
 
 if __name__ == '__main__':
     # skrypt do analizowania przejscia fazowego
-    # rc('font', family='Arial') #Plotowanie polskich liter
+    rc('font', family='Arial') #Plotowanie polskich liter
     #~ Definicje stalych symulacji
     stg = {
         # 'CONST_CLIQUE'  : 3,      #~ Wielkosc kliki
-        'CONST_VERTICES'  : 10000,   #~ Ilosc wezlow
+        'CONST_VERTICES'  : 1000,   #~ Ilosc wezlow
         'CONST_OVERRIDEN' : False,  #~ Czy ma nadpisywac pliki podczas zapisywania wynikow   
         'CONST_DUMP'      : True,   # czy ma zrzucac wektory wynikow 
         # 'CONST_PATH_BASIC_FOLDER' : 'Wyniki_barabasi_lazy_fazowe',
         'CONST_PATH_BASIC_FOLDER' : 'Wyniki_lazy_meanK',
-        'CONST_MEAN_k'    : 8.0,
+        'CONST_MEAN_k'    : 22.0,
         'CONST_PATH_WYK'  : 'time_dla_er_lazy_fazowe_k8',
         'CONST_FAZOWE'    : False,         
-        # 'CONST_START_MAGNETIZATION' : 0.5
+        'CONST_START_MAGNETIZATION' : 0.5
     }
 
     analyze(stg)
